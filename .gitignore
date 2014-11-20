@@ -1,2 +1,5 @@
 #ignore library
 library/
+
+#ignore public
+public/
