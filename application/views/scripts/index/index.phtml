@@ -164,6 +164,11 @@ $this->headScript()->appendScript('
 			switch(parseInt(flash_msg))
 			{
 				
+				case 999 : 
+					$("#alertModalLabel").html("บัญชีของท่านถูกระงับการใช้งาน");
+					$("#alertModal").modal("show"); 
+					break;
+
 				case 699 : 
 					$("#alertModalLabel").html("ทำการเปลี่ยนรหัสผ่านสำเร็จ");
 					$("#alertModal").modal("show"); 

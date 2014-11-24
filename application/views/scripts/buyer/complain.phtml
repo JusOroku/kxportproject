@@ -1,0 +1,119 @@
+
+
+<body>
+
+<?php 
+	// set data default variable
+	$iFlashMsg = 0;
+	
+	// check validation callback
+	if (count($this->aFlashMsg) > 0) {
+		$aFlashMsg		= $this->aFlashMsg;
+		$iFlashMsg		= $aFlashMsg[0]['status'];
+	}
+?>
+
+
+<input type="hidden" id="flash_msg" name="flash_msg"
+	value="<?php echo $iFlashMsg; ?>" />
+<?php
+$sSellerName = '';
+$sReason = '';
+
+?>
+
+<input type="hidden" id="flash_msg" name="flash_msg"
+		value="<?php echo $iFlashMsg; ?>">
+
+	<form data-parsley-validate class="form-horizontal" id="testForm"
+		name="testForm" method="post"
+		action="<?php
+		echo $this->url ( array (
+				'controller' => 'buyer',
+				'action' => 'complain-backend' 
+		), null, true );
+		?>"
+		enctype="application/x-www-form-urlencoded">
+		<fieldset>
+			<!-- Form Name -->
+			<legend class="text-center">Complain</legend>
+			<!-- Text input-->
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="username">ชื่อผู้ขาย</label>
+				<div class="col-md-4">
+					<input id="username" name="username" class="form-control input-md"
+						type="text" maxlength='15' Value="<?php echo $sSellerName ?>"
+						data-parsley-type="alphanum" required
+						data-parsley-length="[8, 15]"
+						data-parsley-length-message="username ต้องมีความยาวระหว่าง 8-15 ตัวอักษร" />
+				</div>
+			</div>
+			<!-- Text input-->
+
+
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="description">เหตุผล</label>
+				<div class="col-md-4">
+					<textarea id="reason" name="reason" class="form-control" row="3"
+						style="resize: none;" required data-parsley-length="[1, 250]"
+						required><?php echo $sReason ?></textarea>
+				</div>
+			</div>
+
+			<!-- Select Basic -->
+			</div>
+			<br>
+			<!-- Button (Double) -->
+			<div class="form-group">
+				<label class="col-md-5 control-label" for="submit"></label>
+				<div class="col-md-7">
+					<button class="btn btn-back btn-danger" type="button"
+						onclick="window.location='<?php
+						echo $this->url ( array (
+								'controller' => 'index',
+								'action' => 'product-list' 
+						), null, true );
+						?>';">ย้อนกลับ</button>
+					<button class="btn btn-success" type="submit">
+						<span class="glyphicon glyphicon-ok"></span> ยืนยัน
+					</button>
+				</div>
+			</div>
+		</fieldset>
+		<div class=col-md-4></div>
+	</form>
+	<div class="modal fade" id="alertModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header text-center">
+					<h4 class="modal-title" id="alertModalLabel">default</h4>
+				</div>
+				<div class="modal-body text-center">
+					<button type="button" class="btn btn-default" data-dismiss="modal">ตกลง</button>
+				</div>
+			</div>
+		</div>
+	</div>
+<?php
+$this->headScript ()->appendScript ( '
+var flash_msg;
+$(document).ready(function () {
+// get flash messenger value
+flash_msg = $("#flash_msg").val();
+switch(parseInt(flash_msg)) {
+case 901 :
+$("#alertModalLabel").html("ไม่พบผู้ใช้นี้อยู่ในระบบ กรุณาลองใหม่อีกครั้ง");
+$("#alertModal").modal("show");
+break;
+
+case 900 :
+$("#alertModalLabel").html("ร้องเรียนสำเร็จ");
+$("#alertModal").modal("show");
+break;
+
+}
+});
+' );
+?>
+</body>

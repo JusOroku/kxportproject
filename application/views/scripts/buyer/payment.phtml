@@ -1,0 +1,143 @@
+
+<body>
+
+<?php 
+	// set data default variable
+	$iFlashMsg = 0;
+	
+	// check validation callback
+	if (count($this->aFlashMsg) > 0) {
+		$aFlashMsg		= $this->aFlashMsg;
+		$iFlashMsg		= $aFlashMsg[0]['status'];
+	}
+?>
+<input type="hidden" id="flash_msg" name="flash_msg"
+	value="<?php echo $iFlashMsg; ?>" />
+
+<?php
+
+$data = $this->aData;
+?>
+
+<div class="tableProduct">
+		<style>
+table {
+	width: 100%;
+	margin-top: 10px;
+	height: 400px;
+}
+
+td.left {
+	width: 40%;
+	padding: 15px;
+}
+
+td.right {
+	width: 60%;
+	padding: 15px;
+	vertical-align: top;
+}
+
+img {
+	border: 1px solid #C0C0C0;
+	width: 250px;
+	height: 300px;
+}
+</style>
+
+		<table align="center">
+			<legend class="text-center">ชำระเงิน</legend>
+	
+	<?php for($i=0 ; $i < sizeof($data,0);$i++){?>
+	
+		
+	
+			<tr>
+				<td class="left" align="center">
+					<!--  <p style="font-size: 20px;">ตุ๊กตาปิกาจู</p> <br>-->
+					<div class="img">
+						<img src="../images/<?php echo $data[$i][1];?>">
+					</div> <br>
+
+
+				</td>
+
+
+				<td class="right" align="left"><br> <br> <br> <!-- 	<p><?php  ?></p>-->
+					<p>ชื่อสินค้า <?php echo $data[$i][0];?></p>
+					<p>จำนวน <?php echo $data[$i][2];?></p>
+					<p>ราคา <?php echo $data[$i][3];?></p> 
+		<form data-parsley-validate class="form-horizontal" id="testForm"
+		name="testForm" method="post"
+		action="<?php
+		
+		echo $this->url ( array (
+				'controller' => 'buyer',
+				'action' => 'payment-clear', 
+				'id'    =>  $data[$i][4]
+		), null, true );
+		?>"enctype="application/x-www-form-urlencoded"> 
+					<p> เลขบัตรเครดิต <input id="username" name="username" required/
+					data-parsley-type="digits"
+					maxlength = "19"
+					required data-parsley-length="[16, 19]"
+					>
+					<div class="form-group">
+						<label class="col-md-1 control-label" for="submit"></label>
+						<div class="col-md-7">
+					
+							<button class="btn btn-success" type="submit">
+								
+								<span class="glyphicon glyphicon-ok"></span> ยืนยัน
+							</button>
+						</div>
+					</div>
+				</form>
+				
+					<div class=col-md-4></div></td>
+			</tr>
+	<?php }?>
+	
+	</table>
+
+<div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-sm">
+	    <div class="modal-content">
+		  	<div class="modal-header text-center">
+		     	<h4 class="modal-title" id="alertModalLabel">default</h4>
+		 	</div>
+		 	<div class="modal-body text-center">
+	        	<button type="button" class="btn btn-default" data-dismiss="modal">ตกลง</button>
+		   	</div>
+	 	</div>
+	</div>
+</div>	
+
+<?php
+$this->headScript()->appendScript('
+
+		var flash_msg;
+
+		$(document).ready(function () {
+
+			// get flash messenger value
+			flash_msg = $("#flash_msg").val();
+
+			switch(parseInt(flash_msg))
+			{
+				
+				case 900 : 
+					$("#alertModalLabel").html("ซื้อสินค้าสำเร็จกรุณา เช็คอีเมล์ของท่านเพื่อตรวจสอบข้อมูลและ ทำการ feedback จากอีเมล์");
+					$("#alertModal").modal("show"); 
+					break;
+			}			
+
+	});
+
+		
+');
+?>
+
+
+</body>
+

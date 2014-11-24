@@ -13,6 +13,8 @@
           <actionMethod actionName="changePasswordForm"/>
           <actionMethod actionName="register"/>
           <actionMethod actionName="productList"/>
+          <actionMethod actionName="buyoutProductList"/>
+          <actionMethod actionName="bidProductList"/>
         </controllerFile>
         <controllerFile controllerName="Error"/>
         <controllerFile controllerName="System">
@@ -24,6 +26,7 @@
           <actionMethod actionName="sendRegisterEmail"/>
           <actionMethod actionName="sendActivateEmail"/>
           <actionMethod actionName="verifyAccount"/>
+          <actionMethod actionName="editProfile"/>
         </controllerFile>
         <controllerFile controllerName="Product">
           <actionMethod actionName="index"/>
@@ -33,6 +36,19 @@
           <actionMethod actionName="buy"/>
           <actionMethod actionName="bid"/>
           <actionMethod actionName="bidAuto"/>
+        </controllerFile>
+        <controllerFile controllerName="Admin">
+          <actionMethod actionName="index"/>
+          <actionMethod actionName="unban"/>
+          <actionMethod actionName="banList"/>
+        </controllerFile>
+        <controllerFile controllerName="Buyer">
+          <actionMethod actionName="index"/>
+          <actionMethod actionName="editProfile"/>
+          <actionMethod actionName="payment"/>
+          <actionMethod actionName="paymentClear"/>
+          <actionMethod actionName="complain"/>
+          <actionMethod actionName="complainBackend"/>
         </controllerFile>
       </controllersDirectory>
       <formsDirectory enabled="false"/>
@@ -50,6 +66,9 @@
           <dbTableFile dbTableName="BuyoutProductTbl"/>
           <dbTableFile dbTableName="BidProductTbl"/>
           <dbTableFile dbTableName="ProductTbl"/>
+          <dbTableFile dbTableName="BidRelationTbl"/>
+          <dbTableFile dbTableName="BuyoutRelationTbl"/>
+          <dbTableFile dbTableName="ComplainRelationTbl"/>
         </dbTableDirectory>
       </modelsDirectory>
       <modulesDirectory enabled="false"/>
@@ -125,6 +144,42 @@
           <viewControllerScriptsDirectory forControllerName="Product">
             <viewScriptFile forActionName="bidAuto"/>
           </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Admin">
+            <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Admin">
+            <viewScriptFile forActionName="unban"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Admin">
+            <viewScriptFile forActionName="banList"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Index">
+            <viewScriptFile forActionName="buyoutProductList"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Index">
+            <viewScriptFile forActionName="bidProductList"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Buyer">
+            <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Buyer">
+            <viewScriptFile forActionName="editProfile"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="System">
+            <viewScriptFile forActionName="editProfile"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Buyer">
+            <viewScriptFile forActionName="payment"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Buyer">
+            <viewScriptFile forActionName="paymentClear"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Buyer">
+            <viewScriptFile forActionName="complain"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Buyer">
+            <viewScriptFile forActionName="complainBackend"/>
+          </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
         <viewFiltersDirectory enabled="false"/>
@@ -165,6 +220,8 @@
             <testApplicationActionMethod forActionName="changePasswordForm"/>
             <testApplicationActionMethod forActionName="register"/>
             <testApplicationActionMethod forActionName="productList"/>
+            <testApplicationActionMethod forActionName="buyoutProductList"/>
+            <testApplicationActionMethod forActionName="bidProductList"/>
           </testApplicationControllerFile>
           <testApplicationControllerFile forControllerName="System">
             <testApplicationActionMethod forActionName="index"/>
@@ -175,6 +232,7 @@
             <testApplicationActionMethod forActionName="sendRegisterEmail"/>
             <testApplicationActionMethod forActionName="sendActivateEmail"/>
             <testApplicationActionMethod forActionName="verifyAccount"/>
+            <testApplicationActionMethod forActionName="editProfile"/>
           </testApplicationControllerFile>
           <testApplicationControllerFile forControllerName="Product">
             <testApplicationActionMethod forActionName="index"/>
@@ -184,6 +242,19 @@
             <testApplicationActionMethod forActionName="buy"/>
             <testApplicationActionMethod forActionName="bid"/>
             <testApplicationActionMethod forActionName="bidAuto"/>
+          </testApplicationControllerFile>
+          <testApplicationControllerFile forControllerName="Admin">
+            <testApplicationActionMethod forActionName="index"/>
+            <testApplicationActionMethod forActionName="unban"/>
+            <testApplicationActionMethod forActionName="banList"/>
+          </testApplicationControllerFile>
+          <testApplicationControllerFile forControllerName="Buyer">
+            <testApplicationActionMethod forActionName="index"/>
+            <testApplicationActionMethod forActionName="editProfile"/>
+            <testApplicationActionMethod forActionName="payment"/>
+            <testApplicationActionMethod forActionName="paymentClear"/>
+            <testApplicationActionMethod forActionName="complain"/>
+            <testApplicationActionMethod forActionName="complainBackend"/>
           </testApplicationControllerFile>
         </testApplicationControllerDirectory>
       </testApplicationDirectory>

@@ -77,9 +77,17 @@ echo $this->headLink()
 <?php
 	$sWelcomeMessege = ""; 
 	$oSession = new Zend_Session_Namespace('system_session');
+	
+	
 	if(isset($oSession->username)){
-		$sWelcomeMessege = "ยินดีต้อนรับสู่ระบบ EBS,Pun_Arm(Buyer) ";
+		$sWelcomeMessege = "ยินดีต้อนรับสู่ระบบ EBS คุณ: " . $oSession->username ."  (" . $oSession->permission . ")";
 	}
+	
+	if(!isset($oSession->username)){
+		$sWelcomeMessege = "ยินดีต้อนรับสู่ระบบ EBS ผู้มาเยี่ยม";
+	}
+	
+	
 ?>
 
 <?php 
@@ -651,7 +659,7 @@ echo $this->headLink()
 									'controller' => 'product',
 									'action' => 'search-product'), null, true); ?>"
 						enctype="application/x-www-form-urlencoded" method="post">
-						<input type="text" name="sSearchName" class="input-block-level"
+						<input type="text" name="sProductName" class="input-block-level"
 						placeholder="ค้นหาผลิตภัณฑ์"/>
 						<button class="btn btn-success" type="submit">
 						<span class="glyphicon glyphicon-search"></span>ค้นหา</button>
@@ -663,6 +671,10 @@ echo $this->headLink()
 			<!-- start navbarArea -->
 			<div id="navbarArea" class="col-md-12 col-sm-12 col-xm-12" style="position: absolute ;background-color: #CCCCCC; height: 45px; top: 80px; z-index: 4;">
 				
+				
+				<?php 
+				if(isset($oSession->username)){
+				?>
 				<div class="btn-group" style="position: absolute; right: 10px; top: 5px">
 				  	<button type="button" class="btn btn-success"
 				  	onclick="window.location='<?php echo $this->url(array(
@@ -670,7 +682,26 @@ echo $this->headLink()
 								'action' => 'logout'), null, true); ?>';"
 				  	>ออกจากระบบ</button>
 				</div>
+				<?php 
+				}
+				?>
 				
+				
+				<?php 
+				if(!isset($oSession->username)){
+				?>
+				<div class="btn-group" style="position: absolute; right: 10px; top: 5px">
+				  	<button type="button" class="btn btn-success"
+				  	onclick="window.location='<?php echo $this->url(array(
+								'controller' => 'index',
+								'action' => 'index'), null, true); ?>';"
+				  	>กลับสู่หน้าแรก</button>
+				</div>
+				
+				
+				<?php 
+				}
+				?>
 				<div class="btn-group" style="position: absolute; right: 120px; top: 7px; color: #0A1135;">
 				  	<h5><?php echo $sWelcomeMessege; ?></h5>
 				</div>
@@ -733,55 +764,48 @@ echo $this->headLink()
 									onclick="window.location='<?php echo $this->url(array(
 											'controller'	=> 'index',
 											'action'		=> 'product-list',), null, true); ?>';">
-												<span class="glyphicon glyphicon-home"></span> กลับสู่หน้าแรก
+												<?php if ($oSession->permission != "admin") {?>
+												กลับสู่หน้ารายการสินค้า
+												<?php } else {?>
+												กลับสู่หน้าหลัก
+												<?php }?>
 											</button>
 							</div>
+							
+							<?php 
+							if(isset($oSession->username) && $oSession->permission == "buyer") {
+							?>
 							<div class="btn-group-vertical" style="position: absolute; top: 80px; left: 30px; width: 190px;">
-								<div class="btn-group">
-									<button id="btnGroupVerticalDrop1" type="button"
-									class="btn btn-default dropdown-toggle dgd-text-left-imp"
-									data-toggle="dropdown">
-<!-- 										<span class="glyphicon glyphicon-save"></span>&nbsp&nbsp -->
-										<small>เมนูผู้ซื้อ</small>
-										<span class="caret"></span>
-									</button>
-									<ul class="dropdown-menu menuBar" role="menu"
-									aria-labelledby="btnGroupVerticalDrop1">
-										<li><a href="<?php echo $this->url(array(
-											'controller'	=> 'gr',
-											'action'		=> 'batch-list',), null, true); ?>">
-												<p>Put-away monitor</p> </a></li>
-										<li><a href="<?php echo $this->url(array(
-											'controller' => 'gr',
-											'action' => 'batch-list-full-screen'), null, true); ?>">
-												<p>Monitor full screen</p> </a></li>
-										<li><a href="<?php echo $this->url(array(
-											'controller' => 'batch',
-											'action' => 'batch-add-form'), null, true); ?>">
-												<p>Add new batch</p> </a></li>		
-									</ul>
-								</div>
-								
-								<div class="btn-group">
-									<button id="btnGroupVerticalDrop1" type="button"
-									class="btn btn-default dropdown-toggle dgd-text-left-imp"
-									data-toggle="dropdown">
-<!-- 										<span class="glyphicon glyphicon-open"></span>&nbsp&nbsp -->
-										<small>แก้ไขข้อมูลส่วนบุคคล</small>
-										<span class="caret"></span>
-									</button>
-									<ul class="dropdown-menu menuBar" role="menu"
-									aria-labelledby="btnGroupVerticalDrop1">
-										<li><a href="<?php echo $this->url(array(
-											'controller'	=> 'Gi',
-											'action'		=> 'dp-list',), null, true); ?>">
-												<p>DP monitor</p> </a></li>		
-									</ul>
-								</div>
-								
+									<button type="button" class="btn btn-default disabled"
+									>
+												เมนูผู้ซื้อ
+											</button>
 											
+									<button type="button" class="btn btn-default "
+									onclick="window.location='<?php echo $this->url(array(
+											'controller'	=> 'Buyer',
+											'action'		=> 'payment',), null, true); ?>';">
+												ดูรายการจ่ายเงินสินค้า
+											</button>	
+											
+									<button type="button" class="btn btn-default "
+									onclick="window.location='<?php echo $this->url(array(
+											'controller'	=> 'buyer',
+											'action'		=> 'edit-profile',), null, true); ?>';">
+												แก้ไขข้อมูลส่วนตัว
+											</button>
+											
+									<button type="button" class="btn btn-default "
+									onclick="window.location='<?php echo $this->url(array(
+											'controller'	=> 'buyer',
+											'action'		=> 'complain',), null, true); ?>';">
+												ร้องเรียนผู้ขาย
+											</button>				
 							</div>
 							
+							<?php 
+							}
+							?>
 							
 						
 						

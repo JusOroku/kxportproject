@@ -8,6 +8,9 @@ class IndexController extends Zend_Controller_Action
         Zend_Session::start();
     	// initialize session and define current language
     	$oSession = new Zend_Session_Namespace('system_session');
+    	if($oSession->permission == "admin"){
+    	return $this->_helper->redirector('ban-list', 'admin');
+    	}
     }
 
     public function indexAction()
@@ -190,8 +193,121 @@ class IndexController extends Zend_Controller_Action
     	$this->view->oAllProductData 	= $aAllProductData;
     }
 
+    public function buyoutProductListAction()
+    {
+          // action body
+    	$oProductTbl 		= new Application_Model_DbTable_ProductTbl();
+    	$oBuyoutProductTbl 	= new Application_Model_DbTable_BuyoutProductTbl();
+    	
+    	$oSelectBuyoutProductData 	= $oBuyoutProductTbl->select ()	->where ( 'pid > ?', 0 )
+															    	->where ( 'deleted <> ?', 1 )
+															    	->from ( array ('c' => 'buyout_product_tbl'),array (
+															    			'pid',
+															    			'price'
+															    	) );
+    	$aFetchBuyoutProductData 	= $oBuyoutProductTbl->fetchAll($oSelectBuyoutProductData);
+    	$iBuyoutProductData 		= count($aFetchBuyoutProductData);
+//     	Zend_Debug::dump($aFetchBuyoutProductData);
+		$aBuyoutProductData = array();
+    	for($i=0;$i<$iBuyoutProductData;$i++){
+    		$aBuyoutProductData[$i]['pid'] 				= $aFetchBuyoutProductData[$i]['pid'];
+    		$aBuyoutProductData[$i]['price'] 			= $aFetchBuyoutProductData[$i]['price'];
+    		$aBuyoutProductData[$i]['showPrice']		= $aFetchBuyoutProductData[$i]['price'];
+    	}
+    	for($i=0;$i<$iBuyoutProductData;$i++){
+    		$oSelectProductData 	= $oProductTbl->select ()	->where ( 'id = ?', $aBuyoutProductData[$i]['pid'] )
+    															->where ( 'deleted <> ?', 1 )
+												    		->from ( array ('c' => 'product_tbl'),array (
+												    				'id',
+													    			'product_name',
+													    			'seller_id',
+													    			'brand',
+													    			'quantity',
+													    			'properties',
+												    				'pay_status',
+													    			'order_price'
+    		) );
+    		$aFetchProductData 	= $oProductTbl->fetchAll($oSelectProductData);
+//     		Zend_Debug::dump($aFetchProductData);
+    		$aBuyoutProductData[$i]['id'] 			= $aFetchProductData[0]['id'];
+			$aBuyoutProductData[$i]['product_name'] = $aFetchProductData[0]['product_name'];
+			$aBuyoutProductData[$i]['seller_id'] 	= $aFetchProductData[0]['seller_id'];
+			$aBuyoutProductData[$i]['brand'] 		= $aFetchProductData[0]['brand'];
+			$aBuyoutProductData[$i]['quantity'] 	= $aFetchProductData[0]['quantity'];
+			$aBuyoutProductData[$i]['properties'] 	= $aFetchProductData[0]['properties'];
+			$aBuyoutProductData[$i]['order_price'] 	= $aFetchProductData[0]['order_price'];
+			$aBuyoutProductData[$i]['pay_status'] 	= $aFetchProductData[0]['pay_status'];
+    	}
+//     	Zend_Debug::dump($aBuyoutProductData);
+//     	die;
+		//set data to view
+    	$this->view->oAllProductData 	= $aBuyoutProductData;
+    }
+
+    public function bidProductListAction()
+    {
+        // action body
+    	// action body
+    	$oProductTbl 		= new Application_Model_DbTable_ProductTbl();
+    	$oBidProductTbl 	= new Application_Model_DbTable_BidProductTbl();
+    	 
+    	$oSelectBidProductData 	= $oBidProductTbl->select ()		->where ( 'pid > ?', 0 )
+															    	->where ( 'deleted <> ?', 1 )
+															    	->from ( array ('c' => 'bid_product_tbl'),array (
+															    			'pid',
+															    			'current_price',
+															    			'current_maxbid_price',
+															    			'finishdate',
+															    			'current_winner',
+															    			'start_price'
+															    	) );
+    	$aFetchBidProductData 		= $oBidProductTbl->fetchAll($oSelectBidProductData);
+    	$iBidProductData 			= count($aFetchBidProductData);
+    	//     	Zend_Debug::dump($aFetchBuyoutProductData);
+    	$aBidProductData = array();
+    	for($i=0;$i<$iBidProductData;$i++){
+    		$aBidProductData[$i]['pid'] 				= $aFetchBidProductData[$i]['pid'];
+    		$aBidProductData[$i]['price'] 				= $aFetchBidProductData[$i]['current_price'];
+    		$aBidProductData[$i]['showPrice']			= $aFetchBidProductData[$i]['current_price'];
+    		$aBidProductData[$i]['start_price']			= $aFetchBidProductData[$i]['start_price'];
+    		$aBidProductData[$i]['finishdate']			= $aFetchBidProductData[$i]['finishdate'];
+    	}
+    	for($i=0;$i<$iBidProductData;$i++){
+    		$oSelectProductData 	= $oProductTbl->select ()	->where ( 'id = ?', $aBidProductData[$i]['pid'] )
+    		->where ( 'deleted <> ?', 1 )
+    		->from ( array ('c' => 'product_tbl'),array (
+    				'id',
+    				'product_name',
+    				'seller_id',
+    				'brand',
+    				'quantity',
+    				'properties',
+    				'pay_status',
+    				'order_price'
+    		) );
+    		$aFetchProductData 	= $oProductTbl->fetchAll($oSelectProductData);
+    		//     		Zend_Debug::dump($aFetchProductData);
+    		$aBidProductData[$i]['id'] 				= $aFetchProductData[0]['id'];
+    		$aBidProductData[$i]['product_name'] 	= $aFetchProductData[0]['product_name'];
+    		$aBidProductData[$i]['seller_id'] 		= $aFetchProductData[0]['seller_id'];
+    		$aBidProductData[$i]['brand'] 			= $aFetchProductData[0]['brand'];
+    		$aBidProductData[$i]['quantity'] 		= $aFetchProductData[0]['quantity'];
+    		$aBidProductData[$i]['properties'] 		= $aFetchProductData[0]['properties'];
+    		$aBidProductData[$i]['order_price'] 	= $aFetchProductData[0]['order_price'];
+    		$aBidProductData[$i]['pay_status'] 	= $aFetchProductData[0]['pay_status'];
+    	}
+//     	    	Zend_Debug::dump($aBuyoutProductData);
+//     	    	die;
+    	//set data to view
+    	$this->view->oAllProductData 	= $aBidProductData;
+    }
+
 
 }
+
+
+
+
 
 
 

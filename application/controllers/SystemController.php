@@ -121,6 +121,13 @@ class SystemController extends Zend_Controller_Action
     		
     		else if ($iBuyerFound > 0) {
     			$permissionStatus = "buyer";
+    			if($oCurrentBuyer->status != 0) {
+    				//banned
+    				$aFormData['status'] = 999;
+    				$this->_helper->FlashMessenger($aFormData);
+    				// go to privous page
+    				return $this->_helper->redirector('index', 'index');
+    			}
     		}
     		else if ($iSellerFound > 0) {
     			$permissionStatus = "seller";
@@ -693,8 +700,171 @@ class SystemController extends Zend_Controller_Action
     		return $this->_helper->redirector ( 'index', 'index' );
     }
 
+    public function editProfileAction()
+    {
+         // action body
+        $oSession = new Zend_Session_Namespace('system_session');
+    	// action body
+    	
+    	// when user press register from registerform redirect to this page to
+    	// update database if valid
+    	
+    	// disabled layout & view
+    	$this->_helper->layout ()->disableLayout ();
+    	$this->_helper->viewRenderer->setNoRender ( true );
+    	
+    	// get http request
+    	$oHttpRequest = $this->getRequest ();
+    	// check data request (Post)
+    	if ($oHttpRequest->isPost () == FALSE) {
+    		/* DANGER CASE */
+    		// return reset action
+    		Zend_Debug::dump ( 'error' );
+    		die ();
+    	}
+    	
+    	
+    	
+    	try {
+    		$aFormData = $oHttpRequest->getParams ();
+    		// initialize validate form data
+    		//Zend_Debug::dump ($aFormData);
+    		//die();
+    		 
+    		$oValidateNotEmpty = new Zend_Validate_NotEmpty ( Zend_Validate_NotEmpty::ALL );
+    			
+    		// validate empty
+    			
+    		// validate condition
+    		if (
+    		! $oValidateNotEmpty->isValid ( $aFormData ['firstname'] ) ||
+    		! $oValidateNotEmpty->isValid ( $aFormData ['lastname'] ) ||
+    		! $oValidateNotEmpty->isValid ( $aFormData ['address'] ) ||
+    		! $oValidateNotEmpty->isValid ( $aFormData ['country'] ) ||
+    		! $oValidateNotEmpty->isValid ( $aFormData ['telnumber'] ) ||
+    		! $oValidateNotEmpty->isValid ( $aFormData ['email'] ) ||
+    		! $oValidateNotEmpty->isValid ( $aFormData ['password'] )) {
+    			$aFormData ['flashStatus'] = '901';
+    			$sErrorMsg = 'Data Empty!';
+    			throw new Exception ( $sErrorMsg );
+    		}
+    			
+    		//validate address
+    		if (!preg_match("/^[a-zA-Z0-9., ]+$/", $aFormData ['address'])) {
+    			$aFormData ['flashStatus'] = '908';
+    			$sErrorMsg = 'Password!';
+    			throw new Exception ( $sErrorMsg );
+    		}
+    		
+    		if (!preg_match_all('$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])\S*$', $aFormData ['newPassword']) && $aFormData['newPassword'] != "") {
+    			$aFormData ['flashStatus'] = '905';
+    			$sErrorMsg = 'Password!';
+    			throw new Exception ( $sErrorMsg );
+    		}
+    		
+    			
+    			
+    		//validate name
+    			
+    		if (!preg_match("/^[a-zA-Z]+$/", $aFormData ['firstname'])) {
+    			$aFormData ['flashStatus'] = '906';
+    			$sErrorMsg = 'Password!';
+    			throw new Exception ( $sErrorMsg );
+    		}
+    			
+    		//validate lastname
+    		if (!preg_match("/^[a-zA-Z]+$/", $aFormData ['lastname'])) {
+    			$aFormData ['flashStatus'] = '907';
+    			$sErrorMsg = 'Password!';
+    			throw new Exception ( $sErrorMsg );
+    		}
+    			
+    	
+    	
+    			
+    			
+    		if ($aFormData ['newPassword'] != $aFormData ['newPasswordConfirm']) {
+    			$aFormData ['flashStatus'] = '898';
+    			$sErrorMsg = 'Data Empty!';
+    			throw new Exception ( $sErrorMsg );
+    		}
+    		$oUserTbl = new Application_Model_DbTable_UserTbl ();
+    		 
+    		
+    		$oSelect = $oUserTbl->select ()->where ( 'id = ?',  $oSession->userId)
+    		->where('password = ?', $aFormData['password']);
+    		$oCurrentEm = $oUserTbl->fetchRow ( $oSelect );
+			
+    		
+    		if ($oCurrentEm == null) {
+    			$aFormData ['flashStatus'] = '895';
+    			$sErrorMsg = 'password wrong';
+    			throw new Exception ( $sErrorMsg );
+    		}
+    		 
+    		
+    			
+    		$oSelect = $oUserTbl->select ()->where ( 'email = ?', $aFormData ['email'] )
+    		->where('id != ?', $oSession->userId);
+    		$oCurrentEmail = $oUserTbl->fetchRow ( $oSelect );
+    	
+    		if ($oCurrentEmail !== null) {
+    			$aFormData ['flashStatus'] = '897';
+    			$sErrorMsg = 'This username have already existed!';
+    			throw new Exception ( $sErrorMsg );
+    		}
+    			
+    	} catch ( Exception $e ) {
+    		/* DANGER CASE */
+    		// return reset action
+    		Zend_Debug::dump ( $e->getMessage () );
+    		$this->_helper->FlashMessenger ( $aFormData );
+    		return $this->_helper->redirector ( 'edit-profile', 'Buyer' );
+    	}
+    	
+    	$oUserTbl = new Application_Model_DbTable_UserTbl ();
+    	
+    	$aUserSaveData = array ();
+    	$aUserSaveData ['firstname'] = $aFormData ['firstname'];
+    	$aUserSaveData ['lastname'] = $aFormData ['lastname'];
+    	$aUserSaveData ['email'] = $aFormData ['email'];
+    	$aUserSaveData ['Address'] = $aFormData ['address'];
+    	$aUserSaveData ['Tel'] = $aFormData ['telnumber'];
+    	$aUserSaveData ['Country'] = $aFormData ['country'];
+    	 
+    	if($aFormData['newPassword'] != ""){
+    	$aUserSaveData['password'] = $aFormData['newPassword'];
+    	}
+    	
+    	$where = $oUserTbl->getAdapter()->quoteInto('id = ?', $oSession->userId);
+    	 
+    	 
+    	$oDb = Zend_Db_Table_Abstract::getDefaultAdapter ();
+    	$oDb->beginTransaction ();
+    	 
+    	try {
+    		// create row and insert new data
+    		$oUserTbl->update($aUserSaveData, $where);
+    		$oDb->commit();
+    		 
+    	} catch ( Exception $e ) {
+    	
+    		// rollback if error happened
+    		$oDb->rollBack ();
+    		$sMessage = $e->getMessage ();
+    		throw new Exception ( $sMessage );
+    		return;
+    	}
+    	 
+    	$aFormData['flashStatus'] = '1000';
+    	$this->_helper->FlashMessenger($aFormData);
+    	return $this->_helper->redirector ( 'edit-profile', 'Buyer' );
+    }
+
 
 }
+
+
 
 
 

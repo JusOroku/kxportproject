@@ -1,6 +1,6 @@
 <?php
 
-class IndexControllerTest extends Zend_Test_PHPUnit_ControllerTestCase
+class BuyerControllerTest extends Zend_Test_PHPUnit_ControllerTestCase
 {
 
     public function setUp()
@@ -11,21 +11,7 @@ class IndexControllerTest extends Zend_Test_PHPUnit_ControllerTestCase
 
     public function testIndexAction()
     {
-        $params = array('action' => 'index', 'controller' => 'Index', 'module' => 'default');
-        $urlParams = $this->urlizeOptions($params);
-        $url = $this->url($urlParams);
-        $this->dispatch($url);
-        
-        // assertions
-        $this->assertModule($urlParams['module']);
-        $this->assertController($urlParams['controller']);
-        $this->assertAction($urlParams['action']);
-        $this->assertQueryContentContains("div#welcome h3", "This is your project's main page");
-    }
-
-    public function testResetPasswordFormAction()
-    {
-        $params = array('action' => 'resetPasswordForm', 'controller' => 'Index', 'module' => 'default');
+        $params = array('action' => 'index', 'controller' => 'Buyer', 'module' => 'default');
         $urlParams = $this->urlizeOptions($params);
         $url = $this->url($urlParams);
         $this->dispatch($url);
@@ -40,9 +26,9 @@ class IndexControllerTest extends Zend_Test_PHPUnit_ControllerTestCase
             );
     }
 
-    public function testChangePasswordFormAction()
+    public function testEditProfileAction()
     {
-        $params = array('action' => 'changePasswordForm', 'controller' => 'Index', 'module' => 'default');
+        $params = array('action' => 'editProfile', 'controller' => 'Buyer', 'module' => 'default');
         $urlParams = $this->urlizeOptions($params);
         $url = $this->url($urlParams);
         $this->dispatch($url);
@@ -57,9 +43,9 @@ class IndexControllerTest extends Zend_Test_PHPUnit_ControllerTestCase
             );
     }
 
-    public function testRegisterAction()
+    public function testPaymentAction()
     {
-        $params = array('action' => 'register', 'controller' => 'Index', 'module' => 'default');
+        $params = array('action' => 'payment', 'controller' => 'Buyer', 'module' => 'default');
         $urlParams = $this->urlizeOptions($params);
         $url = $this->url($urlParams);
         $this->dispatch($url);
@@ -74,9 +60,9 @@ class IndexControllerTest extends Zend_Test_PHPUnit_ControllerTestCase
             );
     }
 
-    public function testProductListAction()
+    public function testPaymentClearAction()
     {
-        $params = array('action' => 'productList', 'controller' => 'Index', 'module' => 'default');
+        $params = array('action' => 'paymentClear', 'controller' => 'Buyer', 'module' => 'default');
         $urlParams = $this->urlizeOptions($params);
         $url = $this->url($urlParams);
         $this->dispatch($url);
@@ -91,9 +77,9 @@ class IndexControllerTest extends Zend_Test_PHPUnit_ControllerTestCase
             );
     }
 
-    public function testBuyoutProductListAction()
+    public function testComplainAction()
     {
-        $params = array('action' => 'buyoutProductList', 'controller' => 'Index', 'module' => 'default');
+        $params = array('action' => 'complain', 'controller' => 'Buyer', 'module' => 'default');
         $urlParams = $this->urlizeOptions($params);
         $url = $this->url($urlParams);
         $this->dispatch($url);
@@ -108,9 +94,9 @@ class IndexControllerTest extends Zend_Test_PHPUnit_ControllerTestCase
             );
     }
 
-    public function testBidProductListAction()
+    public function testComplainBackendAction()
     {
-        $params = array('action' => 'bidProductList', 'controller' => 'Index', 'module' => 'default');
+        $params = array('action' => 'complainBackend', 'controller' => 'Buyer', 'module' => 'default');
         $urlParams = $this->urlizeOptions($params);
         $url = $this->url($urlParams);
         $this->dispatch($url);
@@ -127,8 +113,6 @@ class IndexControllerTest extends Zend_Test_PHPUnit_ControllerTestCase
 
 
 }
-
-
 
 
 
