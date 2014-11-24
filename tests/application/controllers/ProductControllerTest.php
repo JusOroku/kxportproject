@@ -1,6 +1,6 @@
 <?php
 
-class IndexControllerTest extends Zend_Test_PHPUnit_ControllerTestCase
+class ProductControllerTest extends Zend_Test_PHPUnit_ControllerTestCase
 {
 
     public function setUp()
@@ -11,21 +11,7 @@ class IndexControllerTest extends Zend_Test_PHPUnit_ControllerTestCase
 
     public function testIndexAction()
     {
-        $params = array('action' => 'index', 'controller' => 'Index', 'module' => 'default');
-        $urlParams = $this->urlizeOptions($params);
-        $url = $this->url($urlParams);
-        $this->dispatch($url);
-        
-        // assertions
-        $this->assertModule($urlParams['module']);
-        $this->assertController($urlParams['controller']);
-        $this->assertAction($urlParams['action']);
-        $this->assertQueryContentContains("div#welcome h3", "This is your project's main page");
-    }
-
-    public function testResetPasswordFormAction()
-    {
-        $params = array('action' => 'resetPasswordForm', 'controller' => 'Index', 'module' => 'default');
+        $params = array('action' => 'index', 'controller' => 'Product', 'module' => 'default');
         $urlParams = $this->urlizeOptions($params);
         $url = $this->url($urlParams);
         $this->dispatch($url);
@@ -40,9 +26,9 @@ class IndexControllerTest extends Zend_Test_PHPUnit_ControllerTestCase
             );
     }
 
-    public function testChangePasswordFormAction()
+    public function testProductBuyoutAction()
     {
-        $params = array('action' => 'changePasswordForm', 'controller' => 'Index', 'module' => 'default');
+        $params = array('action' => 'productBuyout', 'controller' => 'Product', 'module' => 'default');
         $urlParams = $this->urlizeOptions($params);
         $url = $this->url($urlParams);
         $this->dispatch($url);
@@ -57,9 +43,9 @@ class IndexControllerTest extends Zend_Test_PHPUnit_ControllerTestCase
             );
     }
 
-    public function testRegisterAction()
+    public function testProductBidAction()
     {
-        $params = array('action' => 'register', 'controller' => 'Index', 'module' => 'default');
+        $params = array('action' => 'productBid', 'controller' => 'Product', 'module' => 'default');
         $urlParams = $this->urlizeOptions($params);
         $url = $this->url($urlParams);
         $this->dispatch($url);
@@ -74,9 +60,60 @@ class IndexControllerTest extends Zend_Test_PHPUnit_ControllerTestCase
             );
     }
 
-    public function testProductListAction()
+    public function testSearchProductAction()
     {
-        $params = array('action' => 'productList', 'controller' => 'Index', 'module' => 'default');
+        $params = array('action' => 'searchProduct', 'controller' => 'Product', 'module' => 'default');
+        $urlParams = $this->urlizeOptions($params);
+        $url = $this->url($urlParams);
+        $this->dispatch($url);
+        
+        // assertions
+        $this->assertModule($urlParams['module']);
+        $this->assertController($urlParams['controller']);
+        $this->assertAction($urlParams['action']);
+        $this->assertQueryContentContains(
+            'div#view-content p',
+            'View script for controller <b>' . $params['controller'] . '</b> and script/action name <b>' . $params['action'] . '</b>'
+            );
+    }
+
+    public function testBuyAction()
+    {
+        $params = array('action' => 'buy', 'controller' => 'Product', 'module' => 'default');
+        $urlParams = $this->urlizeOptions($params);
+        $url = $this->url($urlParams);
+        $this->dispatch($url);
+        
+        // assertions
+        $this->assertModule($urlParams['module']);
+        $this->assertController($urlParams['controller']);
+        $this->assertAction($urlParams['action']);
+        $this->assertQueryContentContains(
+            'div#view-content p',
+            'View script for controller <b>' . $params['controller'] . '</b> and script/action name <b>' . $params['action'] . '</b>'
+            );
+    }
+
+    public function testBidAction()
+    {
+        $params = array('action' => 'bid', 'controller' => 'Product', 'module' => 'default');
+        $urlParams = $this->urlizeOptions($params);
+        $url = $this->url($urlParams);
+        $this->dispatch($url);
+        
+        // assertions
+        $this->assertModule($urlParams['module']);
+        $this->assertController($urlParams['controller']);
+        $this->assertAction($urlParams['action']);
+        $this->assertQueryContentContains(
+            'div#view-content p',
+            'View script for controller <b>' . $params['controller'] . '</b> and script/action name <b>' . $params['action'] . '</b>'
+            );
+    }
+
+    public function testBidAutoAction()
+    {
+        $params = array('action' => 'bidAuto', 'controller' => 'Product', 'module' => 'default');
         $urlParams = $this->urlizeOptions($params);
         $url = $this->url($urlParams);
         $this->dispatch($url);
@@ -93,6 +130,10 @@ class IndexControllerTest extends Zend_Test_PHPUnit_ControllerTestCase
 
 
 }
+
+
+
+
 
 
 

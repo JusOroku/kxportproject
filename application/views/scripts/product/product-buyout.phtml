@@ -1,0 +1,151 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<?php echo $this->headMeta(); ?>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<?php
+/* print html title string and avoid cross-site scripting attack */
+/* $this->headTitle() -> pointer on html head title */
+/* $this->escape() -> avoid cross-site scripting attack (every time when you print out) */
+/* $this->translate() -> translate variable to text string */
+// echo $this->headTitle($this->escape($this->translate('ttl_application')));
+echo $this->headTitle ( $this->escape ( 'Warehouse Management System' ) );
+?>
+<base
+	href="<?php
+	if (empty ( $_SERVER ['HTTPS'] )) {
+		echo 'http://';
+	} else {
+		echo 'https://';
+	}
+	/* $this->baseUrl() -> declare base url default or start directory path */
+	echo $_SERVER ['HTTP_HOST'] . $this->baseUrl ();
+	?>" />
+<link rel="shortcut icon"
+	href="<?php echo $this->baseUrl('images/icon/favicon-icon.ico'); ?>" />
+<link rel="apple-touch-icon-precomposed" sizes="512x512"
+	href="<?php echo $this->baseUrl('images/icon/zbv.png'); ?>" />
+<!--
+iPhone and iPad Shortcuts
+For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: 57x57
+For first-generation iPad: 72x72
+For iPhone 4 with high-resolution Retina display: 114x114
+-->
+<!--
+<link rel="apple-touch-icon" href="<?php // echo $this->baseUrl('images/apple-touch-icon.png'); ?>" />
+<link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.png" />
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="apple-touch-icon-72x72-precomposed.png" />
+<link rel="apple-touch-icon-precomposed" sizes="512x512" href="<?php echo $this->baseUrl('images/icon/zbv.png'); ?>" />
+-->
+<?php
+/* $this->headLink()-> pointer on html head link for style sheet declare (CSS) */
+echo $this->headLink ()->appendStylesheet ( $this->baseUrl ( 'css/jquery-ui.css' ) )->appendStylesheet ( $this->baseUrl ( 'css/bootstrap.css' ) )->appendStylesheet ( $this->baseUrl ( 'css/font-awesome.css' ) )->appendStylesheet ( $this->baseUrl ( 'css/select2.css' ) )->appendStylesheet ( $this->baseUrl ( 'css/style.css' ) )->appendStylesheet ( $this->baseUrl ( 'css/jquery.dataTables.css' ) );
+/* define browser */
+// ->appendStylesheet($this->baseUrl('css/ie.css'), null, 'gte IE 7')
+?>
+
+</head>
+<body>
+
+
+	<div class="tableProduct">
+		<style>
+table {
+	width: 100%;
+	margin-top: 10px;
+	height: 400px;
+}
+
+td.left {
+	width: 40%;
+	padding: 15px;
+}
+
+td.right {
+	width: 60%;
+	padding: 15px;
+	vertical-align: top;
+}
+
+img {
+	border: 1px solid #C0C0C0;
+	width: 250px;
+	height: 300px;
+}
+</style>
+
+		<table align="center">
+
+			<tr>
+				<td class="left" align="center">
+					<p style="font-size: 20px;"><?php echo $this->sProductName?></p> <br>
+					<div class="img">
+						<img src="../images/<?php echo $this->pProductImage?>">
+					</div> <br>
+
+					<div clss="buttonBuyout">
+						<form id="loginForm" name="loginForm"
+							action="<?php
+							
+							echo $this->url ( array (
+									'controller' => 'product',
+									'action' => 'buy' 
+							), null, true );
+							?>"
+							enctype="application/x-www-form-urlencoded" method="post">
+							<input type="hidden" name="id" value=<?php echo $this->iProductId?> />
+							<button class="btn btn-success" type="submit">
+								<span class="glyphicon glyphicon-ok"></span> ซื้อเลยยย !!!
+							</button>
+						</form>
+					</div>
+
+				</td>
+
+				<td class="right" align="left"><br> <br> <br>
+					<p>ราคา<?php echo " " . $this->sPrice; ?> บาท</p>
+					<p>ผู้ขาย : <?php echo $this->sSellerName?></p>
+					<p>วิธีการขาย : ประมูล</p>
+					<p>จำนวน : <?php echo $this->sQuantity?></p>
+					<p>ยี่ห้อ : <?php echo $this->sBrand?></p>
+					<p>รุ่น : <?php echo $this->sModel?></p>
+					<p>ขนาด: <?php echo $this->sSize?></p>
+					<p>สภาพสินค้า : <?php echo $this->sCondition?></p>
+					<p>คุณสมบัติ :<?php echo $this->sProperty?></p>
+
+					<p>นโยบายการรับสินค้าคืน : <?php echo $this->sReturn?></p>
+					<p>วิธีการบรรจุหีบห่อ : <?php echo $this->sPacking?></p>
+
+
+
+
+
+					</p> <br></td>
+			</tr>
+
+
+		</table>
+
+	</div>
+
+
+
+
+</body>
+<?php
+/* $this->headScript() -> pointer end of html for include script files (JS) */
+/* reverse order because of prepend! */
+echo $this->headScript ()->prependFile ( $this->baseUrl ( 'js/bootstrap.js' ) )->prependFile ( $this->baseUrl ( 'js/jquery-1.9.0.js' ) );
+?>
+<?php
+
+$this->headScript ()->appendScript ( '
+$(document).ready(function () {
+$("#myTab a").click(function (e) {
+e.preventDefault()
+$(this).tab("show")
+})
+});
+
+' );
+?>
