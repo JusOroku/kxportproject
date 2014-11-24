@@ -1,0 +1,193 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<style>
+#header {
+	padding: 15px;
+	margin-left: 30px
+}
+
+#nav {
+	height: 250px;
+	width: 300px;
+	float: Left;
+	padding: 15px;
+	margin-left: 30px;
+}
+
+#section {
+	width: 300px;
+	float: left;
+	padding: 15px;
+}
+
+textarea {
+	width: 270px;
+	min-width: 270px;
+	max-width: 270px;
+	height: 120px;
+	min-height: 120px;
+	max-height: 120px;
+}
+}
+</style>
+
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<?php echo $this->headMeta(); ?>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<?php
+	/* print html title string and avoid cross-site scripting attack */
+	/* $this->headTitle()	-> pointer on html head title */
+	/* $this->escape()		-> avoid cross-site scripting attack (every time when you print out)*/
+	/* $this->translate()	-> translate variable to text string */
+	//echo $this->headTitle($this->escape($this->translate('ttl_application')));
+	echo $this->headTitle($this->escape('Electro Bidding System'));
+	/**/
+	?>
+	<base
+	href="<?php
+	        if (empty($_SERVER['HTTPS'])) {
+	            echo 'http://';
+	        } else {
+	            echo 'https://';
+	        }
+	        /* $this->baseUrl()		-> declare base url default or start directory path */
+	        echo $_SERVER['HTTP_HOST'].$this->baseUrl();
+	        /**/
+	        ?>" />
+<link rel="shortcut icon"
+	href="<?php echo $this->baseUrl('images/icon/favicon-icon.ico'); ?>" />
+<link rel="apple-touch-icon-precomposed" sizes="512x512"
+	href="<?php echo $this->baseUrl('images/icon/zbv.png'); ?>" />
+<!--
+	    	iPhone and iPad Shortcuts
+	    	For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: 57x57
+	    	For first-generation iPad: 72x72
+	    	For iPhone 4 with high-resolution Retina display: 114x114
+		-->
+<!--
+	    	<link rel="apple-touch-icon" href="<?php // echo $this->baseUrl('images/apple-touch-icon.png'); ?>" />
+		    <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.png" />
+		    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="apple-touch-icon-72x72-precomposed.png" />
+		    <link rel="apple-touch-icon-precomposed" sizes="512x512" href="<?php echo $this->baseUrl('images/icon/zbv.png'); ?>" />
+		-->
+	<?php
+	/* $this->headLink()-> pointer on html head link for style sheet declare (CSS) */
+	echo $this->headLink()
+	->appendStylesheet($this->baseUrl('css/jquery-ui.css'))
+	->appendStylesheet($this->baseUrl('css/bootstrap.css'))
+	->appendStylesheet($this->baseUrl('css/font-awesome.css'))
+	->appendStylesheet($this->baseUrl('css/select2.css'))
+	->appendStylesheet($this->baseUrl('css/style.css'))
+	->appendStylesheet($this->baseUrl('css/jquery.dataTables.css'));
+	/* define browser */
+	// ->appendStylesheet($this->baseUrl('css/ie.css'), null, 'gte IE 7')
+	/**/
+	?>
+
+</head>
+
+<body>
+<?php 
+$sellername = $this->sellerName;
+$productname = $this->productName;
+$productpic = $this->productImage;
+
+$sReason = '';
+?>
+<br />
+	<br />
+	<div id="view-content">
+		<legend class="text-center">Feedback</legend>
+		<div id="nav">
+			<img src="../images/<?php echo $productpic?>" class="image-thumbnail"
+				width="200" height="200">
+		</div>
+		<div id="section">
+			<p><b>ชื่อสินค้า</b>	<?php echo $productname?></p>
+			<p><b>ชื่อผู้ขาย</b>	<?php echo $sellername?></p>
+
+			<form data-parsley-validate class="form-horizontal" id="testForm"
+				name="testForm" method="post"
+				action="<?php
+			echo $this->url ( array (
+				'controller' => 'buyer',
+				'action' => 'feedback-view'
+			), null, true );
+				?>"
+				enctype="application/x-www-form-urlencoded">
+				
+				<input type="hidden" id="pid" name="pid"
+				value="<?php echo $this->pid; ?>">
+				<fieldset>
+					<!-- Form Name -->
+					
+					<!-- Text input-->
+					<div class="form-group">
+						<label for="score" class="col-sm-2 control-label">คะแนน </label>
+						<div class="col-sm-10">
+							<select name="score" class="form-control">
+								<option value=-10>-10</option>
+								<option value=-9>-9</option>
+								<option value=-8>-8</option>
+								<option value=-7>-7</option>
+								<option value=-6>-6</option>
+								<option value=-5>-5</option>
+								<option value=-4>-4</option>
+								<option value=-3>-3</option>
+								<option value=-2>-2</option>
+								<option value=-1>-1</option>
+								<option value=0 selected>0</option>
+								<option value=1>1</option>
+								<option value=2>2</option>
+								<option value=3>3</option>
+								<option value=4>4</option>
+								<option value=5>5</option>
+								<option value=6>6</option>
+								<option value=7>7</option>
+								<option value=8>8</option>
+								<option value=9>9</option>
+								<option value=10>10</option>
+							</select>
+						</div>
+					</div>
+					<!-- Text input-->
+
+
+					<div class="form-group">
+						<label class="col-md-3 control-label" for="description">เหตุผล</label>
+						<div class="col-md-3">
+							<textarea id="reason" name="reason" class="form-control"
+								row="3" style="resize: none;" required
+								data-parsley-length="[1, 250]"
+								data-parsley-length-message="address มีความยาวได้มากสุด 250 ตัวอักษร"
+								required><?php echo $sReason ?></textarea>
+						</div>
+					</div>
+
+					<!-- Select Basic -->
+		
+		</div>
+		<br>
+		<!-- Button (Double) -->
+		<div class="form-group">
+			<label class="col-md-5 control-label" for="submit"></label>
+			<div class="col-md-7 col-md-offset-5" >
+				<button class="btn btn-back btn-danger" type="button"
+					onclick="window.location='<?php
+							echo $this->url ( array (
+								'controller' => 'index',
+								'action' => 'product-list'
+							), null, true );
+						?>';">ย้อนกลับ</button>
+				<button class="btn btn-success" type="submit">
+					<span class="glyphicon glyphicon-ok"></span> ยืนยัน
+				</button>
+			</div>
+		</div>
+		</fieldset>
+		<div class=col-md-4></div>
+		</form>
+	</div>
+
+	</div>
+</body>

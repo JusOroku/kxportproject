@@ -25,7 +25,7 @@ echo $this->doctype();
 /* $this->escape()		-> avoid cross-site scripting attack (every time when you print out)*/
 /* $this->translate()	-> translate variable to text string */
 //echo $this->headTitle($this->escape($this->translate('ttl_application')));
-echo $this->headTitle($this->escape('Warehouse Management System'));
+echo $this->headTitle($this->escape('Electronic Bidding System'));
 /**/
 ?>
 <base
@@ -807,6 +807,26 @@ echo $this->headLink()
 							}
 							?>
 							
+							
+							<?php 
+							if(isset($oSession->username) && $oSession->permission == "admin") {
+							?>
+							<div class="btn-group-vertical" style="position: absolute; top: 80px; left: 30px; width: 190px;">
+									
+											
+									<button type="button" class="btn btn-default "
+									onclick="window.location='<?php echo $this->url(array(
+											'controller'	=> 'admin',
+											'action'		=> 'complain-list',), null, true); ?>';">
+												ดูคำร้อง
+											</button>	
+											
+									
+							</div>
+							
+							<?php 
+							}
+							?>
 						
 						
 					

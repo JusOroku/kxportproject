@@ -12,7 +12,7 @@ class AdminController extends Zend_Controller_Action
     {
         // action body
     }
-	
+
     public function unbanAction()
     {
         // action body
@@ -126,7 +126,8 @@ class AdminController extends Zend_Controller_Action
     	}
     }
 
-    public function banListAction(){
+    public function banListAction()
+    {
     	try{
     	$oBuyerTbl = new Application_Model_DbTable_BuyerTbl ();
     	$oSelectBuyer = $oBuyerTbl->select ()->where('status = ?', '1');
@@ -156,7 +157,52 @@ class AdminController extends Zend_Controller_Action
     	}
     }
 
+    public function complainListAction()
+    {
+    try {
+			$oComplainTbl = new Application_Model_DbTable_ComplainRelationTbl ();
+			$oSelectComplain = $oComplainTbl->select ();
+			$oAllComplain = $oComplainTbl->fetchAll ( $oSelectComplain );
+			$iComplainCount = $oAllComplain->count ();
+			
+			$oUserTbl = new Application_Model_DbTable_UserTbl ();
+			
+			$aComplain = array ();
+			
+			for($i = 0; $i < $iComplainCount; $i ++) {
+				
+				$oSelectUser = $oUserTbl->select ()->where ( 'id = ?', $oAllComplain [$i] ['buyer_id'] );
+				
+				$oAllUser = $oUserTbl->fetchAll ( $oSelectUser );
+				
+				$sBuyerName = $oAllUser [0] ['username'];
+				
+				$aComplain [$i] [0] = $sBuyerName;
+				
+				$oSelectedUser = $oUserTbl->select ()->where ( 'id = ?', $oAllComplain [$i] ['seller_id'] );
+				
+				$oAllUsers = $oUserTbl->fetchAll ( $oSelectedUser );
+				
+				$sSellerName = $oAllUsers [0] ['username'];
+				
+				$aComplain [$i] [1] = $sSellerName;
+				
+				$sReason = $oAllComplain [$i] ['reason'];
+				
+				$aComplain [$i] [2] = $sReason;
+			}
+			// Zend_Debug::dump ( $aComplain );
+			
+			$this->view->aComplainList = $aComplain;
+		} catch ( Exception $e ) {
+			//
+		}
+    }
+
+
 }
+
+
 
 
 

@@ -41,6 +41,7 @@
           <actionMethod actionName="index"/>
           <actionMethod actionName="unban"/>
           <actionMethod actionName="banList"/>
+          <actionMethod actionName="complainList"/>
         </controllerFile>
         <controllerFile controllerName="Buyer">
           <actionMethod actionName="index"/>
@@ -49,6 +50,8 @@
           <actionMethod actionName="paymentClear"/>
           <actionMethod actionName="complain"/>
           <actionMethod actionName="complainBackend"/>
+          <actionMethod actionName="feedback"/>
+          <actionMethod actionName="feedbackView"/>
         </controllerFile>
       </controllersDirectory>
       <formsDirectory enabled="false"/>
@@ -69,6 +72,7 @@
           <dbTableFile dbTableName="BidRelationTbl"/>
           <dbTableFile dbTableName="BuyoutRelationTbl"/>
           <dbTableFile dbTableName="ComplainRelationTbl"/>
+          <dbTableFile dbTableName="FeedbackRelationTbl"/>
         </dbTableDirectory>
       </modelsDirectory>
       <modulesDirectory enabled="false"/>
@@ -180,6 +184,15 @@
           <viewControllerScriptsDirectory forControllerName="Buyer">
             <viewScriptFile forActionName="complainBackend"/>
           </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Buyer">
+            <viewScriptFile forActionName="feedback"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Buyer">
+            <viewScriptFile forActionName="feedbackView"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Admin">
+            <viewScriptFile forActionName="complainList"/>
+          </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
         <viewFiltersDirectory enabled="false"/>
@@ -247,6 +260,7 @@
             <testApplicationActionMethod forActionName="index"/>
             <testApplicationActionMethod forActionName="unban"/>
             <testApplicationActionMethod forActionName="banList"/>
+            <testApplicationActionMethod forActionName="complainList"/>
           </testApplicationControllerFile>
           <testApplicationControllerFile forControllerName="Buyer">
             <testApplicationActionMethod forActionName="index"/>
@@ -255,6 +269,8 @@
             <testApplicationActionMethod forActionName="paymentClear"/>
             <testApplicationActionMethod forActionName="complain"/>
             <testApplicationActionMethod forActionName="complainBackend"/>
+            <testApplicationActionMethod forActionName="feedback"/>
+            <testApplicationActionMethod forActionName="feedbackView"/>
           </testApplicationControllerFile>
         </testApplicationControllerDirectory>
       </testApplicationDirectory>

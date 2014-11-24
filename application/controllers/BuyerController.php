@@ -137,7 +137,7 @@ class BuyerController extends Zend_Controller_Action
 			}
 			
 			$this->view->aData = $aProductList;
-			Zend_Debug::dump ( $this->view->aData );
+		//	Zend_Debug::dump ( $this->view->aData );
 		} catch ( Exception $e ) {
 		}
     }
@@ -280,8 +280,192 @@ class BuyerController extends Zend_Controller_Action
     }
     }
 
+    public function feedbackAction()
+    {
+        // action body
+    	$oSession = new Zend_Session_Namespace('system_session');
+    	$userId = $oSession->userId;
+    	
+    	$oHttpRequest = $this->getRequest ();
+    	//	Zend_Debug::dump ($aFormData);
+    	//	die();
+    	// check data request (Post)
+    	if ($oHttpRequest->isGet () == FALSE) {
+    		/* DANGER CASE */
+    		// return reset action
+    		Zend_Debug::dump ( 'error' );
+    		die ();
+    		$this->_helper->redirector ( 'index', 'index' );
+    	}
+    	$aFormData = $oHttpRequest->getParams();
+    	$ipid = $aFormData['id'];
+    		
+    	$oProductTbl = new Application_Model_DbTable_ProductTbl();
+    	$oSelectProduct = $oProductTbl->select()->where('id = ?',$ipid);
+    	$oCurrentProduct = $oProductTbl->fetchRow($oSelectProduct);
+    	
+    	$sSellerId = $oCurrentProduct['seller_id'];
+    	$oUserTbl = new Application_Model_DbTable_UserTbl();
+    	$oSelectUser = $oUserTbl->select()->where('id=?',$sSellerId);
+    	$oCurrentUser = $oUserTbl->fetchRow($oSelectUser);
+    	
+    	$sSellerName = $oCurrentUser['username'];
+    	$sProductName = $oCurrentProduct['product_name'];
+    	$sProductImage = $oCurrentProduct['product_image'];
+    	
+    	$this->view->pid = $ipid;
+    	
+    	$this->view->sellerName = $sSellerName;
+    	$this->view->productName = $sProductName;
+    	$this->view->productImage = $sProductImage;
+    	
+    }
+
+    public function feedbackViewAction()
+    {
+        // action body
+    	
+    	// when user press feedback from feedbackform redirect to this page to
+    	// update database if valid
+    	
+    	     	// disabled layout & view
+    	    	$this->_helper->layout ()->disableLayout ();
+    	    	$this->_helper->viewRenderer->setNoRender ( true );
+    	
+    	     	// get http request
+    	   		$oHttpRequest = $this->getRequest ();
+    	     	//	Zend_Debug::dump ($aFormData);
+    	    	//	die();
+    	     	// check data request (Post)
+    	     	if ($oHttpRequest->isPost () == FALSE) {
+    	     		/* DANGER CASE */
+    	     		// return reset action
+    	    		Zend_Debug::dump ( 'error' );
+    	     		die ();
+    	     	}
+    	
+    	//Zend_Debug::dump($var);
+    	
+    	     	$oSession = new Zend_Session_Namespace('system_session');
+    	     	$userId = $oSession->userId;
+    	     	 
+    	     	
+    	try {
+    		// aFormData has [score],[reason],[pid = product id], and [bid = buyer id]
+    		$aFormData = $oHttpRequest->getParams ();
+    		// initialize validate form data
+    		$oValidateNotEmpty = new Zend_Validate_NotEmpty ( Zend_Validate_NotEmpty::ALL );
+    		Zend_Debug::dump($aFormData);
+    	//	die();
+    		// validate empty
+    		 
+    		// validate condition
+    		if (! $oValidateNotEmpty->isValid ( $aFormData ['reason'] )) {
+    			$aFormData ['flashStatus'] = '901';
+    			$sErrorMsg = 'Data Empty!';
+    			throw new Exception ( $sErrorMsg );
+    		}
+    		 
+    		//validate score
+    	/*	if (-10< intval($aFormData ['score']) || intval($aFormData ['score']>10) ) {
+    			$aFormData ['flashStatus'] = '908'; // need to adjust
+    			$sErrorMsg = 'Wrong Score!';
+    			throw new Exception ( $sErrorMsg );
+    		} */
+    		 
+    		//validate reason
+    		if (!preg_match("/^[a-zA-Z0-9., ]+$/", $aFormData ['reason'])) {
+    			$aFormData ['flashStatus'] = '908'; // need to adjust
+    			$sErrorMsg = 'Wrong reason!';
+    			throw new Exception ( $sErrorMsg );
+    		}
+
+    		
+    	//	$oProductTbl = new Application_Model_DbTable_ProductTbl();
+    	//	$oSelectedProduct = $oProductTbl->select ()->where ( 'id = ?', $aFormData ['username'] );
+    		 
+    		
+    		$oBidRelationTbl = new Application_Model_DbTable_BidRelationTbl ();
+    		$oSelectBidRelation = $oBidRelationTbl->select ()
+    		->where('biid = ?',$aFormData['pid']);
+    		$oCurrentBidRelation = $oBidRelationTbl->fetchRow ( $oSelectBidRelation );
+    		Zend_Debug::dump($oCurrentBidRelation);
+    		
+    		
+    		$oBuyoutRelationTbl = new Application_Model_DbTable_BuyoutRelationTbl ();
+    		$oSelectBuyoutRelation = $oBuyoutRelationTbl->select ()
+    		->where('bpid = ?',$aFormData['pid']);
+    		$oCurrentBuyoutRelation = $oBuyoutRelationTbl->fetchRow ( $oSelectBuyoutRelation );
+    		Zend_Debug::dump($oCurrentBuyoutRelation);
+    		
+    		
+    		if ($oCurrentBidRelation == null AND $oCurrentBuyoutRelation == null) {
+    			$aFormData ['flashStatus'] = '897'; // need to adjust
+    			$sErrorMsg = 'This product does not exist!';
+    			throw new Exception ( $sErrorMsg );
+    		}
+    	} catch ( Exception $e ) {
+    		/* DANGER CASE */
+    		// return reset action
+    		Zend_Debug::dump ( $e->getMessage () );
+    		$this->_helper->FlashMessenger ( $aFormData );
+    		//return $this->_helper->redirector ( 'register', 'Index' ); //need to adjust
+    		return;
+    	}
+    	
+    	// The input is correct, we are now going to insert feedback into feedback table
+    	
+    	$oFeedbackRelationTbl = new Application_Model_DbTable_FeedbackRelationTbl ();
+    	
+    	// set current datetime format
+    	$sCurrentDateTime = Zend_Date::now ()->toString ( 'yyyy-MM-dd HH:mm:ss' );
+    	
+    	$aFeedbackRelationSaveData = array ();
+    	$aFeedbackRelationSaveData ['id'] = '';
+    	$aFeedbackRelationSaveData ['pid'] = $aFormData ['pid'];
+    	$aFeedbackRelationSaveData ['score'] = $aFormData ['score'];
+    	$aFeedbackRelationSaveData ['reason'] = $aFormData ['reason'];
+    	
+    	$oDb = Zend_Db_Table_Abstract::getDefaultAdapter ();
+    	$oDb->beginTransaction ();
+    	
+    	try {
+    		// create row and insert new data
+    		$oFeedbackRelationRow = $oFeedbackRelationTbl->createRow ();
+    		$oFeedbackRelationRow->setFromArray ( $aFeedbackRelationSaveData );
+    		$iFeedbackRelationId = $oFeedbackRelationRow->save ();
+    		 
+    		if (null !== $iFeedbackRelationId) {
+    	
+    			// commit database
+    			$oDb->commit ();
+    			$oTypeTbl = null;
+    			$aFormData ['status'] = '901'; // need to adjust
+    			$this->_helper->FlashMessenger ( $aFormData );
+    			return $this->_helper->redirector ( 'payment', 'buyer' ); // need to adjust
+    		}
+    		else {
+    			// throw error
+    			throw new Exception ( 'save feedback data error please try again!' );
+    			return;
+    		}
+    		 
+    	} catch ( Exception $e ) {
+    		 
+    		// rollback if error happened
+    		$oDb->rollBack ();
+    		$sMessage = $e->getMessage ();
+    		throw new Exception ( $sMessage );
+    		return;
+    	}
+    }
+
 
 }
+
+
+
+
 
 
 
