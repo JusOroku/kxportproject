@@ -1,0 +1,602 @@
+<?php
+
+// set data default variable
+$iFlashMsg = 0;
+$sBatch = '';
+$sMaterial = '';
+$sNameTH = '';
+$sNameEN = '';
+$sPaperType = '';
+$sSellType = '';
+$sLocationSellType = '';
+$sGrade = '';
+$dWidth = '';
+$dLength = '';
+$dGram = '';
+$dReam =  '';
+$sGrain = '';
+$iSorter =  '';
+$sProductionDate = '';
+$sPoNumber = '';
+$iReference = '';
+$sRollProductionDate = '';
+$sCustomer = '';
+
+
+// check validation callback
+if (count ( $this->aFlashMsg ) > 0) {
+	$aFlashMsg 				= $this->aFlashMsg;
+	$sBatch 				= $aFlashMsg [0] ['batchNumber'];
+	$sMaterial 				= $aFlashMsg [0] ['materialNumber'];
+	$sNameTH 				= $aFlashMsg [0] ['nameTH'];
+	$sNameEN 				= $aFlashMsg [0] ['nameEN'];
+	$sPaperType 			= $aFlashMsg [0] ['paperType'];
+	$sSellType 				= $aFlashMsg [0] ['sellType'];
+	$sLocationSellType 		= $aFlashMsg [0] ['locationSellType'];
+	$sGrade		 			= $aFlashMsg [0] ['grade'];
+	$dWidth 				= $aFlashMsg [0] ['width'];
+	$dLength				= $aFlashMsg [0] ['length'];
+	$dGram 					= $aFlashMsg [0] ['gram'];
+	$dReam 					= $aFlashMsg [0] ['ream'];
+	$sGrain 				= $aFlashMsg [0] ['grain'];
+	$iSorter 				= $aFlashMsg [0] ['sorter'];
+	$sPoNumber 				= $aFlashMsg [0] ['poNumber'];
+	$sProductionDate 		= $aFlashMsg [0] ['productionDate'];
+	$iReference 			= $aFlashMsg [0] ['reference'];
+	$sRollProductionDate	= $aFlashMsg [0] ['rollProductionDate'];
+	$sCustomer 				= $aFlashMsg [0] ['customer'];
+	
+	$iFlashMsg = $aFlashMsg [0] ['flashStatus'];
+}
+
+?>
+
+<?php
+$aLocationSellType = array (
+		'D' => 'Domestic',
+		'E' => 'Export',
+		);
+?>
+
+<?php 
+$oWMSPackData = $this->oWMSPackData;
+// $iNumWMSPackRow = $oWMSPackData -> count();
+$oMaterialData = $this->oMaterialData;
+// $iNumMaterialData = $oMaterialData -> count();
+?>
+
+<input type="hidden" id="flash_msg" name="flash_msg"
+	value="<?php echo $iFlashMsg; ?>">
+
+	<form data-parsley-validate class="form-horizontal" id="testForm" name="testForm"
+		method="post"
+		action="<?php
+		
+		echo $this->url ( array (
+				'controller' => 'save',
+				'action' => 'batch' 
+		), null, true );
+		?>"
+		enctype="application/x-www-form-urlencoded">
+		<fieldset>
+
+			<!-- Form Name -->
+			<legend class="text-center">เพิ่มสินค้าใหม่</legend>
+
+			<!-- Text input-->
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="batch">ชื่อสินค้า</label>
+				<div class="col-md-4">
+					<input id="batchNumber" name="batchNumber"
+						class="form-control input-md batchErr" type="text" maxlength = '10'	
+						autocomplete="off"		
+						value = "<?php echo $sBatch?>" 
+						required data-parsley-length="[10, 10]" 
+						data-parsley-length-message ="Batch Number ต้องมีความยาว 10 ตัวอักษร"
+						/>
+
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="batch">ภาพสินค้า</label>
+				<div class="col-md-4">
+					<form action="upload.php" method="post" enctype="multipart/form-data">
+    				เลือกภาพที่ต้องการอัพโหลด(ขนาดไม่เกิน 7mb):
+    				<input type="file" name="fileToUpload" id="fileToUpload">
+    				<input type="submit" value="อัพโหลด" name="submit">
+					</form>
+
+				</div>
+			</div>
+			
+		
+		
+		
+			<!-- Text input-->
+		
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="material">ยี่ห้อ</label>
+				<div class="col-md-4">
+					<input id="materialNumber" name="materialNumber" 
+						class="input-md materialErr" type="text" maxlength = '18'
+						value = "<?php echo $sMaterial?>" 
+						required data-parsley-length="[18, 18]"
+						data-parsley-length-message ="Material Number ต้องมีความยาว 18 ตัวอักษร"
+						/>
+
+				</div>
+			</div>
+			
+	
+			<!-- Text input-->
+			<!-- 
+			<div class="form-group">
+				<label class = "col-md-4 control-label" for="gram">Material Number</label>
+				<div class = "col-md-4">
+				<select id="materialNumber" name="materialNumber" class="form-control">
+						<?php for ( $i = 0 ; $i < $iNumMaterialData ; $i++ ) { ?>
+						<option value="<?php echo $oMaterialData[$i]['material'] ?>"
+							<?php
+							
+							if ($sMaterial == $oMaterialData[$i]['material']) {
+								echo "selected = 'selected'";
+							}
+							?>>
+						<?php echo $oMaterialData[$i]['material']; ?>
+						</option>
+						<?php } ?>
+					</select>
+				</div>
+				</div>
+			 -->
+			<!-- Text input-->
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="nameTH">รุ่น</label>
+				<div class="col-md-4">
+					<input id="nameTH" name="nameTH" 
+						class="form-control input-md nameTHErr" type="text" 
+						value = "<?php echo $sNameTH?>"
+						required/>
+
+				</div>
+			</div>
+			
+				<!-- Text input-->
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="nameTH">คุณสมบัติ</label>
+				<div class="col-md-4">
+					<input id="nameEN" name="nameEN" 
+						class="form-control input-md nameENErr" type="text" 
+						value = "<?php echo $sNameEN?>"
+						required/>
+
+				</div>
+			</div>
+			
+			
+			
+			<!-- Text input-->
+			<div class="form-group">
+				<label class = "col-md-4 control-label" for="paperType">ขนาด</label>
+				<div class="col-md-1">
+					<input id="paperType" name="paperType" 
+						class="form-control input-md paperTypeErr" type="text" maxlength = '2'	
+						value = "<?php echo $sPaperType?>"
+						required/>
+
+				</div>
+	
+			<!-- Select Basic -->
+				<label class="col-md-2 control-label" for="locationSellType">จำนวน</label>
+				<div class="col-md-2">
+					<select id="locationSellType" name="locationSellType" class="form-control">
+						<?php foreach ($aLocationSellType as $iKey => $sValue) { ?>
+						<option value="<?php echo $iKey; ?>"
+							<?php
+							
+							if ($sLocationSellType == $iKey) {
+								echo "selected = 'selected'";
+							}
+							?>>
+						<?php echo "1"; ?>
+						</option>
+						<?php } ?>
+					</select>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="nameTH">คุณสมบัติ</label>
+				<div class="col-md-4">
+				 <textarea rows="4" cols="50">
+				</textarea> 
+
+				</div>
+			</div>
+				
+			<label class="col-md-4 control-label" for="locationSellType">วิธีการขายสินค้า</label>
+				<div class="col-md-2">
+					<select id="locationSellType" name="locationSellType" class="form-control">
+						<?php foreach ($aLocationSellType as $iKey => $sValue) { ?>
+						<option value="<?php echo $iKey; ?>"
+							<?php
+							
+							if ($sLocationSellType == $iKey) {
+								echo "selected = 'selected'";
+							}
+							?>>
+						<?php echo "ขายตรง"; ?>
+						</option>
+						<?php } ?>
+					</select>
+				</div>
+			
+			<!-- Text input-->
+			<div class="form-group">
+				<label class="col-md-2 control-label" for="grade">ราคาสินค้า</label>
+				<div class="col-md-1">
+					<input id="grade" name="grade" 
+						class="form-control input-md gradeErr" type="text" 
+						maxlength = '1'	value = "<?php echo $sGrade?>"
+						required/>
+
+				</div>
+				<div class="row">
+					<div class="col-md-12">&nbsp</div>
+				</div>
+				
+				<div class="form-group">
+				<label class="col-md-4 control-label" for="nameTH">นโยบายการรับสินค้าคืน</label>
+				<div class="col-md-4">
+				 <textarea rows="4" cols="50">
+				</textarea> 
+
+				</div>
+				</div>
+				
+				<label class="col-md-4 control-label" for="sellType">ค่าธรรมเนียมการรับสินค้าคืน</label>
+				<div class="col-md-2">
+					<input id="sellType" name="sellType" 
+						class="form-control input-md sellTypeErr" type="text" 
+						maxlength = '3'	value = "<?php echo $sSellType?>"
+						required
+						/>
+				</div>
+				<div class="row">
+					<div class="col-md-12">&nbsp</div>
+				</div>
+				<div class="col-md-10">&nbsp</div>
+				
+				<div class="form-group">
+				<label class="col-md-4 control-label" for="nameTH">วิธีการบรรจุหีบห่อ</label>
+				<div class="col-md-4">
+				 <textarea rows="4" cols="50">
+				</textarea> 
+
+				</div>
+				</div>
+				
+				<div class="form-group">
+				<label class="col-md-4 control-label" for="nameTH">วิธีการขนส่ง</label>
+				<div class="col-md-4">
+				 <textarea rows="4" cols="50">
+				</textarea> 
+
+				</div>
+				</div>
+				<label class="col-md-4 control-label" for="sellType">ค่าธรรมเนียมการยืนยันการจัดส่ง</label>
+				<div class="col-md-2">
+					<input id="sellType" name="sellType" 
+						class="form-control input-md sellTypeErr" type="text" 
+						maxlength = '3'	value = "<?php echo $sSellType?>"
+						required
+						/>
+				</div>
+			</div>
+
+			<!-- Text input-->
+			<div class="form-group">
+				<label class = "col-md-4 control-label" for="width">รหัสไปรษณีย์ของผู้รับ</label>
+				<div class="col-md-1">
+					<input id="width" name="width" 
+						class="form-control input-md widthErr" type="text" 
+						value = "<?php echo $dWidth?>"
+						data-parsley-type="number"
+						required
+						data-parsley-type-message = "เลขเท่านั้น"
+						/>
+				</div>
+				<div class="form-group">
+				<div class="row">
+				</div>
+				</div>
+				<label class="col-md-4 control-label" for="length">ค่าธรรมเนียมการยืนยันการจัดส่ง</label>
+				<div class="col-md-1">
+					<input id="length" name="length" 
+						class="form-control input-md lengthErr" type="text" 
+						value = "<?php echo $dLength?>"
+						data-parsley-type="number"
+						required
+						data-parsley-type-message = "เลขเท่านั้น"
+						/>
+
+				</div>
+			</div>
+			
+			<!-- Text input-->
+				<!-- Text input-->
+			<div class="form-group">
+				<label class = "col-md-4 control-label" for="grain">รหัสไปรษณีย์ของผู้รับ</label>
+				<div class="col-md-1">
+					<input id="grain" name="grain" 
+						class="form-control input-md grainErr" type="text" 
+						value = "<?php echo $sGrain?>"
+						required
+						/>
+
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="nameTH">การส่งที่มีการระบุผู้รับแน่นอน</label>
+				<div class="col-md-4">
+				 <textarea rows="4" cols="50">
+				</textarea> 
+
+				</div>
+				</div>
+				
+				<div class="form-group">
+				<label class="col-md-4 control-label" for="batch">เอกสารยืนยันการรับสินค้า</label>
+				<div class="col-md-4">
+					<form action="upload.php" method="post" enctype="multipart/form-data">
+    				เลือกไฟล์documentที่ต้องการอัพโหลด(ขนาดไม่เกิน 3mb):
+    				<input type="file" name="fileToUpload" id="fileToUpload">
+    				<input type="submit" value="อัพโหลด" name="submit">
+					</form>
+
+				</div>
+			</div>
+
+			<!-- Text input-->
+			<div class="form-group">
+			
+				<label class="col-md-4 control-label" for="poNumber">ระบุภาษี และค่าธรรมเนียมอื่นๆ</label>
+				<div class="col-md-2">
+					<input id="poNumber" name="poNumber" 
+						class="form-control input-md poNumberErr" type="text" maxlength = '10'
+						value = "<?php echo $sPoNumber?>"
+						required
+						/>
+
+				</div>
+			</div>
+			
+			
+			
+			
+			
+
+			<!-- Button (Double) -->
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="submit"></label>
+				<div class="col-md-8">
+					
+					<button class="btn btn-back btn-danger" type="button"
+						onclick="window.location='<?php
+						
+						echo $this->url ( array (
+								'controller' => 'gr',
+								'action' => 'batch-list' 
+						), null, true );
+						?>';">ย้อนกลับ</button>
+					<button class="btn btn-success" type="submit">ยืนยัน</button>
+					
+				</div>
+			</div>
+		</fieldset>
+		<div class=col-md-4></div>
+	
+	
+	</form>
+
+
+
+
+
+<?php
+$this->headScript()->appendScript('
+	var flash_msg;
+
+	//activated date picker
+	$(document).ready(function () {
+		$(".datepicker").datepicker({
+			format : 	"yyyy-mm-dd"
+		}).on("changeDate", function(ev){
+			$(this).datepicker("hide");
+		});
+	
+
+		//Show error message
+		// get flash messenger value
+		flash_msg = $("#flash_msg").val();
+			
+		switch(parseInt(flash_msg)) {
+			case 900 :
+				alert("Add Product Complete");
+				break;
+			case 901 :
+				alert("Data Empty");
+				if($("#batchNumber").val() === ""){
+					$(".batchErr").addClass("redErr");
+				}
+				if($("#materialNumber").val() === ""){
+					$(".materialErr").addClass("redErr");
+				}
+				if($("#nameTH").val() === ""){
+					$(".nameTHErr").addClass("redErr");
+				}
+				if($("#nameEN").val() === ""){
+					$(".nameENErr").addClass("redErr");
+				}
+				if($("#paperType").val() === ""){
+					$(".paperTypeErr").addClass("redErr");
+				}
+				if($("#grade").val() === ""){
+					$(".gradeErr").addClass("redErr");
+				}
+				if($("#sellType").val() === ""){
+					$(".sellTypeErr").addClass("redErr");
+				}
+				if($("#width").val() === ""){
+					$(".widthErr").addClass("redErr");
+				}
+				if($("#length").val() === ""){
+					$(".lengthErr").addClass("redErr");
+				}
+				if($("#gram").val() === ""){
+					$(".gramErr").addClass("redErr");
+				}
+				if($("#ream").val() === ""){
+					$(".reamErr").addClass("redErr");
+				}
+				if($("#grain").val() === ""){
+					$(".grainErr").addClass("redErr");
+				}
+				if($("#sorter").val() === ""){
+					$(".sorterErr").addClass("redErr");
+				}
+				if($("#reference").val() === ""){
+					$(".referenceErr").addClass("redErr");
+				}
+				if($("#customer").val() === ""){
+					$(".customerErr").addClass("redErr");
+				}
+				if($("#productionDate").val() === ""){
+					$(".productionDateErr").addClass("redErr");
+				}
+				if($("#rollProductionDate").val() === ""){
+					$(".rollProductionDateErr").addClass("redErr");
+				}
+				if($("#expireDate").val() === ""){
+					$(".expireDateErr").addClass("redErr");
+				}
+				break;
+			case 899 :
+				alert("Some Data is not number");
+				if ( isNaN( $("#width").val() ) ){
+					$(".widthErr").addClass("redErr");
+				}
+				if ( isNaN( $("#length").val() ) ){
+					$(".lengthErr").addClass("redErr");
+				}
+				if ( isNaN( $("#gram").val() ) ){
+					$(".gramErr").addClass("redErr");
+				}
+				if ( isNaN( $("#ream").val() ) ){
+					$(".reamErr").addClass("redErr");
+				}
+				break;
+			case 898 :
+				alert("ข้อมูล Production Date และ Roll Production Date ต้องเป็นวันที่เท่านั้น (YYYY-MM-DD HH:MM:SS)");
+				$(".productionDateErr").addClass("redErr");
+				$(".rollProductionDateErr").addClass("redErr");
+				$(".expireDateErr").addClass("redErr");
+				break;
+			case 897	:
+				alert("Batch Number ที่ต้องการเพิ่มซ้ำกับข้อมูลที่มีอยู่ในระบบ กรุณาใส่ Batch Number หมายเลขอื่น");
+				$(".BatchNumberErr").addClass("redErr");
+				break;		
+		}
+
+		// select2 material list
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url: "json/json-select-material-list",
+			contentType: "application/json;charset=utf-8",
+			success: function(getData) {
+				$("#materialNumber").select2({
+					width: "100%",
+					maximumInputLength: 18,
+					allowClear: true,
+					multiple: false,
+					createSearchChoice: function(term, data) {
+					    if ($(data).filter(function() {
+					        return this.text.localeCompare(term) === 0;
+					    }).length === 0) {
+					        return {id: term, text: term, isNew: true};
+					    }
+					},
+					formatResult: function(term) {
+					    if (term.isNew) {
+					        return "<span class=\"label label-danger\">New</span> " + term.text;
+					    } else {
+					        return term.text;
+					    }
+					},
+					data: getData,
+				});
+				
+			}
+		});
+
+		// select2 customer list
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url: "json/json-select-customer-list",
+			contentType: "application/json;charset=utf-8",
+			success: function(getData) {
+				$("#customer").select2({
+					width: "100%",
+					allowClear: true,
+					multiple: false,
+					createSearchChoice: function(term, data) {
+					    if ($(data).filter(function() {
+					        return this.text.localeCompare(term) === 0;
+					    }).length === 0) {
+					        return {id: term, text: term, isNew: true};
+					    }
+					},
+					formatResult: function(term) {
+					    if (term.isNew) {
+					        return "<span class=\"label label-danger\">New</span> " + term.text;
+					    } else {
+					        return term.text;
+					    }
+					},
+					data: getData,
+				});
+			}
+		});
+	});
+
+	$("#materialNumber").on("change",function(e){
+		e.preventDefault();
+		var sMat = $(this).val();
+		if(sMat != ""){
+			$.ajax({
+				type: "GET",
+				url: "json/json-ajax-material-info/",
+				data: "sMat=" + sMat,
+				success: function(data, textStatus, XMLHttpRequest){
+					var matObj = jQuery.parseJSON(data);
+					$("#nameTH").val(matObj.results[0].name_th);
+					$("#nameEN").val(matObj.results[0].name_en);
+					$("#sellType").val(matObj.results[0].sell_type);
+					$("#paperType").val(matObj.results[0].paper_type);
+					$("#locationSellType").val(matObj.results[0].location_sell_type);
+					$("#grade").val(matObj.results[0].grade);
+					$("#gram").val(matObj.results[0].gram);
+					$("#width").val(matObj.results[0].width);
+					$("#length").val(matObj.results[0].length);
+					$("#grain").val(matObj.results[0].grain);
+				}
+			});
+		}
+	});
+		
+' );
+?>

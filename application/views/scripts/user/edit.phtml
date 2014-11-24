@@ -1,0 +1,252 @@
+<?php
+
+// set data default variable
+$iFlashMsg = 0;
+$sUsername = '';
+$sPassword = '';
+$sPasswordConfirm = '';
+$sUserType = 'level2';
+$sFirstname	= '';
+$sLastname = '';
+$sDescription = '';
+
+// check validation callback
+if (count ( $this->aFlashMsg ) > 0) {
+	$aFlashMsg 				= $this->aFlashMsg;
+	$sUsername 				= $aFlashMsg [0] ['username'];
+	$sPassword				= $aFlashMsg [0] ['password'];
+	$sPasswordConfirm 		= $aFlashMsg [0] ['passwordConfirm'];
+	$sUserType 				= $aFlashMsg [0] ['userType'];
+	$sFisrtname				= $aFlashMsg [0] ['firstname'];
+	$sLastname				= $aFlashMsg [0] ['lastname'];
+	$sDescription			= $aFlashMsg [0] ['description'];
+	
+	if(isset($aFlashMsg[0]['flashStatus']))
+		$iFlashMsg = $aFlashMsg [0] ['flashStatus'];
+}
+
+?>
+
+<?php
+// $aUserType = array (
+// 		'Admin' => 'Admin',
+// 		'Normal user' => 'Normal user',
+// 		);
+
+?>
+
+<input type="hidden" id="flash_msg" name="flash_msg"
+	value="<?php echo $iFlashMsg; ?>">
+
+	<form data-parsley-validate class="form-horizontal" id="testForm" name="testForm"
+		method="post"
+		action="<?php
+		
+		echo $this->url ( array (
+				'controller' => 'save',
+				'action' => 'user' 
+		), null, true );
+		?>"
+		enctype="application/x-www-form-urlencoded">
+		<fieldset>
+
+			<!-- Form Name -->
+			<legend class="text-center">แก้ไขข้อมูลผู้ใช้</legend>
+			<!-- Text input-->
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="username">ชื่อผู้ใช้</label>
+				<div class="col-md-4">
+					<input id="username" name="username" 
+						class="form-control input-md" type="text" maxlength = '20'			
+						Value = "<?php echo $sUsername ?>"
+						required data-parsley-length="[4, 20]" 
+						data-parsley-length-message ="username ต้องมีความยาวระหว่าง 4-20 ตัวอักษร"
+					/>
+
+				</div>
+			</div>
+			
+			<!-- Text input-->
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="password">รหีสผ่านใหม่</label>
+				<div class="col-md-4">
+					<input id="password" name="password" 
+						class="form-control input-md" type="password" maxlength = '20'
+						required data-parsley-length ="[4, 20]" 
+						data-parsley-length-message ="password ต้องมีความยาวระหว่าง 4-20 ตัวอักษร"
+					/>
+
+				</div>
+			</div>
+			
+			<!-- Text input-->
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="passwordConfirm">ยืนยันรหัสผ่านใหม่</label>
+				<div class="col-md-4">
+					<input id="passwordConfirm" name="passwordConfirm" 
+						class="form-control input-md" type="password" maxlength = '20'
+						required data-parsley-length ="[4, 20]"
+						data-parsley-equalto ="#password"
+						data-parsley-length-message ="password ต้องมีความยาวระหว่าง 4-20 ตัวอักษร"	
+						data-parsley-equalto-message = "password ไม่ตรงกัน"
+					/>
+
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="firstname">ชื่อจริง</label>
+				<div class="col-md-4">
+					<input id="firstname" name="firstname"
+						class="form-control input-md" type="text" maxlength = '20'			
+						Value = "<?php echo $sFirstname ?>"
+						required data-parsley-length="[0, 20]" 
+						data-parsley-length-message ="firstname มีความยาวได้มากสุด 20 ตัวอักษร"
+					/>
+
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="lastname">นามสกุล</label>
+				<div class="col-md-4">
+					<input id="lastname" name="lastname" 
+						class="form-control input-md" type="text" maxlength = '20'			
+						Value = "<?php echo $sLastname ?>"
+						required data-parsley-length="[0, 20]" 
+						data-parsley-length-message ="lastname มีความยาวได้มากสุด 20 ตัวอักษร"	
+					/>
+
+				</div>
+			</div>
+			
+			
+			
+			
+			
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="description">ที่อยู่</label>
+				<div class="col-md-4">
+					<textarea id="description" name="description" 
+						class="form-control" row="3" style="resize:none;"><?php echo $sDescription ?></textarea>
+				</div>
+			</div>
+			
+			<label class="col-md-4 control-label" for="locationSellType">ประเทศ</label>
+				<div class="col-md-2">
+					<select id="locationSellType" name="locationSellType" class="form-control">
+						<option value="ประเทศไทย"></option>
+					</select>
+				</div>
+			<div class="row">
+				<div class="col-md-12">&nbsp</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="firstname">เบอร์โทรศัพท์</label>
+				<div class="col-md-4">
+					<input id="firstname" name="firstname"
+						class="form-control input-md" type="text" maxlength = '20'			
+						Value = "<?php echo $sFirstname ?>"
+						required data-parsley-length="[0, 20]" 
+						data-parsley-length-message ="firstname มีความยาวได้มากสุด 20 ตัวอักษร"
+					/>
+
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="firstname">อีเมลล์</label>
+				<div class="col-md-4">
+					<input id="firstname" name="firstname" 
+						class="form-control input-md" type="text" maxlength = '20'			
+						Value = "<?php echo $sFirstname ?>"
+						required data-parsley-length="[0, 20]" 
+						data-parsley-length-message ="firstname มีความยาวได้มากสุด 20 ตัวอักษร"
+					/>
+
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="firstname">เลขบัญชี</label>
+				<div class="col-md-4">
+					<input id="firstname" name="firstname" 
+						class="form-control input-md" type="text" maxlength = '20'			
+						Value = "<?php echo $sFirstname ?>"
+						required data-parsley-length="[0, 20]" 
+						data-parsley-length-message ="firstname มีความยาวได้มากสุด 20 ตัวอักษร"
+					/>
+
+				</div>
+			</div>
+			<!-- Select Basic -->
+				
+				
+			</div>
+			
+			<br>
+			<!-- Button (Double) -->
+			<div class="form-group">
+				<label class="col-md-5 control-label" for="submit"></label>
+				<div class="col-md-7">
+					<button class="btn btn-back btn-danger" type="button"
+						onclick="window.location='<?php
+						
+						echo $this->url ( array (
+								'controller' => 'setting',
+								'action' => 'user-list' 
+						), null, true );
+						?>';">ย้อนกลับ</button>
+					<button class="btn btn-success" type="submit"><span class="glyphicon glyphicon-ok"></span> ยืนยัน</button>
+				</div>
+			</div>
+		</fieldset>
+		<div class=col-md-4></div>
+
+	</form>
+
+<div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-sm">
+	    <div class="modal-content">
+		  	<div class="modal-header text-center">
+		     	<h4 class="modal-title" id="alertModalLabel">default</h4>
+		 	</div>
+		 	<div class="modal-body text-center">
+	        	<button type="button" class="btn btn-default" data-dismiss="modal">ตกลง</button>
+		   	</div>
+	 	</div>
+	</div>
+</div>
+
+<?php
+$this->headScript ()->appendScript ( '
+
+		var flash_msg;
+
+
+		$(document).ready(function () {
+
+	
+			// get flash messenger value
+			flash_msg = $("#flash_msg").val();
+		
+			switch(parseInt(flash_msg)) {
+				case 901 :
+					$("#alertModalLabel").html("กรุณาใส่ข้อมูลให้ครบ");
+					$("#alertModal").modal("show");
+					break;
+				case 898 :
+					$("#alertModalLabel").html("Password ไม่ตรงกัน");
+					$("#alertModal").modal("show");
+					break;
+				case 897 :
+					$("#alertModalLabel").html("Username นี้ถูกใช้งานแล้ว");
+					$("#alertModal").modal("show");
+					break;
+			}
+		});
+
+		
+' );
+?>
+

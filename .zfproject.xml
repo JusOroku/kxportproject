@@ -9,8 +9,21 @@
       <controllersDirectory>
         <controllerFile controllerName="Index">
           <actionMethod actionName="index"/>
+          <actionMethod actionName="resetPasswordForm"/>
+          <actionMethod actionName="changePasswordForm"/>
+          <actionMethod actionName="register"/>
         </controllerFile>
         <controllerFile controllerName="Error"/>
+        <controllerFile controllerName="System">
+          <actionMethod actionName="index"/>
+          <actionMethod actionName="login"/>
+          <actionMethod actionName="logout"/>
+          <actionMethod actionName="sendResetPassword"/>
+          <actionMethod actionName="changePassword"/>
+          <actionMethod actionName="sendRegisterEmail"/>
+          <actionMethod actionName="sendActivateEmail"/>
+          <actionMethod actionName="verifyAccount"/>
+        </controllerFile>
       </controllersDirectory>
       <formsDirectory enabled="false"/>
       <layoutsDirectory>
@@ -18,7 +31,14 @@
           <layoutScriptFile layoutName="layout"/>
         </layoutScriptsDirectory>
       </layoutsDirectory>
-      <modelsDirectory/>
+      <modelsDirectory>
+        <dbTableDirectory>
+          <dbTableFile dbTableName="UserTbl"/>
+          <dbTableFile dbTableName="BuyerTbl"/>
+          <dbTableFile dbTableName="SellerTbl"/>
+          <dbTableFile dbTableName="AdminTbl"/>
+        </dbTableDirectory>
+      </modelsDirectory>
       <modulesDirectory enabled="false"/>
       <servicesDirectory enabled="false"/>
       <viewsDirectory>
@@ -28,6 +48,45 @@
           </viewControllerScriptsDirectory>
           <viewControllerScriptsDirectory forControllerName="Error">
             <viewScriptFile forActionName="error"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="System">
+            <viewScriptFile forActionName="index"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="System">
+            <viewScriptFile forActionName="login"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="System">
+            <viewScriptFile forActionName="logout"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Index">
+            <viewScriptFile forActionName="resetPasswordForm"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Index">
+            <viewScriptFile forActionName="resetPasswordForm"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="System">
+            <viewScriptFile forActionName="sendResetPassword"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Index">
+            <viewScriptFile forActionName="changePasswordForm"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="changePasswordForm">
+            <viewScriptFile forActionName="Index"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="System">
+            <viewScriptFile forActionName="changePassword"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="Index">
+            <viewScriptFile forActionName="register"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="System">
+            <viewScriptFile forActionName="sendRegisterEmail"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="System">
+            <viewScriptFile forActionName="sendActivateEmail"/>
+          </viewControllerScriptsDirectory>
+          <viewControllerScriptsDirectory forControllerName="System">
+            <viewScriptFile forActionName="verifyAccount"/>
           </viewControllerScriptsDirectory>
         </viewScriptsDirectory>
         <viewHelpersDirectory/>
@@ -65,6 +124,19 @@
         <testApplicationControllerDirectory>
           <testApplicationControllerFile forControllerName="Index">
             <testApplicationActionMethod forActionName="index"/>
+            <testApplicationActionMethod forActionName="resetPasswordForm"/>
+            <testApplicationActionMethod forActionName="changePasswordForm"/>
+            <testApplicationActionMethod forActionName="register"/>
+          </testApplicationControllerFile>
+          <testApplicationControllerFile forControllerName="System">
+            <testApplicationActionMethod forActionName="index"/>
+            <testApplicationActionMethod forActionName="login"/>
+            <testApplicationActionMethod forActionName="logout"/>
+            <testApplicationActionMethod forActionName="sendResetPassword"/>
+            <testApplicationActionMethod forActionName="changePassword"/>
+            <testApplicationActionMethod forActionName="sendRegisterEmail"/>
+            <testApplicationActionMethod forActionName="sendActivateEmail"/>
+            <testApplicationActionMethod forActionName="verifyAccount"/>
           </testApplicationControllerFile>
         </testApplicationControllerDirectory>
       </testApplicationDirectory>

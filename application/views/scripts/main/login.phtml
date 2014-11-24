@@ -100,7 +100,7 @@ echo $this->doctype();
 					</div>
 					<form id="loginForm" name="loginForm"
 						action="<?php echo $this->url(array(
-									'controller' => 'system',
+									'controller' => 'index',
 									'action' => 'login'), null, true); ?>"
 						enctype="application/x-www-form-urlencoded" method="post">
 						<h2 class="form-signin-heading" style="color: #515151;">Electronic Bidding System</h2>
@@ -114,22 +114,12 @@ echo $this->doctype();
 							value="ล็อคอินเข้าสู่ระบบ" />
 					</form>
 						<div class="row">&nbsp</div>
-						<div class="row">
 						<div class="link" style="position:absolute;right:30px;">
-							<a href="/index/reset-password-form">ลืมรหัสผ่าน</a>
-						</div>
+							<a href="http://www.w3schools.com">เข้าใช้งานเวปไซต์แบบผู้เยี่ยมชม</a>
 						</div>
 						<div class="row">&nbsp</div>
-						<div class="row">
 						<div class="link" style="position:absolute;right:30px;">
-							<a href="/index/product-list">เข้าใช้งานเวปไซต์แบบผู้เยี่ยมชม</a>
-						</div>
-						</div>
-						<div class="row">&nbsp</div>
-						<div class="row">
-						<div class="link" style="position:absolute;right:30px;">
-							<a href="/index/register">ต้องการสมัครสมาชิกคลิกที่นี่</a>
-						</div>
+							<a href="http://www.w3schools.com">ต้องการสมัครสมาชิกคลิกที่นี่</a>
 						</div>
 						<div class="row">&nbsp</div>
 				</div>
@@ -163,21 +153,6 @@ $this->headScript()->appendScript('
 
 			switch(parseInt(flash_msg))
 			{
-				
-				case 699 : 
-					$("#alertModalLabel").html("ทำการเปลี่ยนรหัสผ่านสำเร็จ");
-					$("#alertModal").modal("show"); 
-					break;
-								
-
-				case 700 : 
-					$("#alertModalLabel").html("ส่งอีเมล์เพื่อให้ทำการเปลี่ยนรหัสผ่านแล้ว");
-					$("#alertModal").modal("show"); 
-					break;
-				case 1000 : 
-					$("#alertModalLabel").html("ยืนยันบัญสำเร็จสามารถเข้าสู่ระบบโดยใช้ชื่อบัญชีที่ยืนยันได้ทันที");
-					$("#alertModal").modal("show"); 
-					break;
 				case 901 : 
 					$("#alertModalLabel").html("คุณกรอกข้อมูลไม่ครบถ้วน");
 					$("#alertModal").modal("show"); 
@@ -195,7 +170,7 @@ $this->headScript()->appendScript('
 					$("#alertModal").modal("show"); 
 					break;
 				case 5 : 
-					$("#alertModalLabel").html("บัญชีนี้ยังไม่ได้ถูกยืนยันกรุณายืนยันก่อน");
+					$("#alertModalLabel").html("กรุณาเข้าสู่ระบบก่อนใช้งาน");
 					$("#alertModal").modal("show"); 
 					break;
 				case 6 : 
@@ -203,8 +178,7 @@ $this->headScript()->appendScript('
 					$("#alertModal").modal("show");
 					break;
 				case 99 : 
- 					$("#alertModalLabel").html("ดำเนินการออกจากระบบอย่างปลอดภัยแล้ว");
-					$("#alertModal").modal("show");
+// 					alert("ดำเนินการออกจากระบบอย่างปลอดภัยแล้ว");
 					break;
 			}			
 

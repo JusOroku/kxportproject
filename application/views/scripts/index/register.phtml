@@ -1,0 +1,405 @@
+<?php
+/**
+* Global layout
+*
+* handle all outer content for all view
+*
+* @copyright 802 Digital Media Co. Ltd.
+* @since File available since Release 1.0
+*/
+?>
+<?php
+/* Initialize specification standard for this page [Bootstrap.php] */
+/* IMPORTANT! -> set up every time */
+echo $this->doctype();
+/**/
+?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<?php echo $this->headMeta(); ?>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<?php
+/* print html title string and avoid cross-site scripting attack */
+/* $this->headTitle() -> pointer on html head title */
+/* $this->escape() -> avoid cross-site scripting attack (every time when you print out)*/
+/* $this->translate() -> translate variable to text string */
+//echo $this->headTitle($this->escape($this->translate('ttl_application')));
+echo $this->headTitle($this->escape('Warehouse Management System'));
+/**/
+?>
+<base
+	href="<?php
+if (empty($_SERVER['HTTPS'])) {
+echo 'http://';
+} else {
+echo 'https://';
+}
+/* $this->baseUrl() -> declare base url default or start directory path */
+echo $_SERVER['HTTP_HOST'].$this->baseUrl();
+/**/
+?>" />
+<link rel="shortcut icon"
+	href="<?php echo $this->baseUrl('images/icon/favicon-icon.ico'); ?>" />
+<link rel="apple-touch-icon-precomposed" sizes="512x512"
+	href="<?php echo $this->baseUrl('images/icon/zbv.png'); ?>" />
+<!--
+iPhone and iPad Shortcuts
+For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: 57x57
+For first-generation iPad: 72x72
+For iPhone 4 with high-resolution Retina display: 114x114
+-->
+<!--
+<link rel="apple-touch-icon" href="<?php // echo $this->baseUrl('images/apple-touch-icon.png'); ?>" />
+<link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.png" />
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="apple-touch-icon-72x72-precomposed.png" />
+<link rel="apple-touch-icon-precomposed" sizes="512x512" href="<?php echo $this->baseUrl('images/icon/zbv.png'); ?>" />
+-->
+<?php
+/* $this->headLink()-> pointer on html head link for style sheet declare (CSS) */
+echo $this->headLink()
+->appendStylesheet($this->baseUrl('css/jquery-ui.css'))
+->appendStylesheet($this->baseUrl('css/bootstrap.css'))
+->appendStylesheet($this->baseUrl('css/font-awesome.css'))
+->appendStylesheet($this->baseUrl('css/select2.css'))
+->appendStylesheet($this->baseUrl('css/style.css'))
+->appendStylesheet($this->baseUrl('css/jquery.dataTables.css'));
+/* define browser */
+// ->appendStylesheet($this->baseUrl('css/ie.css'), null, 'gte IE 7')
+/**/
+?>
+
+</head>
+<body>
+<?php
+
+// set data default variable
+$iFlashMsg = 0;
+$sUsername = '';
+$sPassword = '';
+$sPasswordConfirm = '';
+$sUserType = '';
+$sFirstname	= '';
+$sLastname = '';
+$sAddress	= '';
+$sEmail		= '';
+$sTelNumber	= '';
+$sAccountNumber	= '';
+
+// check validation callback
+if (count ( $this->aFlashMsg ) > 0) {
+	$aFlashMsg 				= $this->aFlashMsg;
+	$sUsername 				= $aFlashMsg [0] ['username'];
+	$sPassword				= $aFlashMsg [0] ['password'];
+	$sPasswordConfirm 		= $aFlashMsg [0] ['passwordConfirm'];
+	$sUserType 				= $aFlashMsg [0] ['userType'];
+	$sFirstname				= $aFlashMsg [0] ['firstname'];
+	$sLastname				= $aFlashMsg [0] ['lastname'];
+	$sAddress				= $aFlashMsg [0] ['address'];
+	$sEmail					= $aFlashMsg [0] ['email'];
+	$sTelNumber				= $aFlashMsg [0] ['telnumber'];
+	$sAccountNumber			= $aFlashMsg [0] ['accountnumber'];
+	
+	
+	if(isset($aFlashMsg[0]['flashStatus']))
+		$iFlashMsg = $aFlashMsg [0] ['flashStatus'];
+}
+
+?>
+
+<?php
+ 	$aUserType = array (
+ 		'1' => 'ผู้ซื้อ',
+ 		'2' => 'ผู้ขาย'
+ 		);
+
+?>
+
+<input type="hidden" id="flash_msg" name="flash_msg"
+		value="<?php echo $iFlashMsg; ?>">
+
+	<form data-parsley-validate class="form-horizontal" id="testForm"
+		name="testForm" method="post"
+		action="<?php
+		
+		echo $this->url ( array (
+				'controller' => 'system',
+				'action' => 'send-register-email' 
+		), null, true );
+		?>"
+		enctype="application/x-www-form-urlencoded">
+		<fieldset>
+
+			<!-- Form Name -->
+			<legend class="text-center">ลงทะเบียนผู้ใช้งานใหม่</legend>
+
+			<!-- Text input-->
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="username">ชื่อผู้ใช้</label>
+				<div class="col-md-4">
+					<input id="username" name="username" class="form-control input-md"
+						type="text" maxlength='15' Value="<?php echo $sUsername ?>"
+						data-parsley-type="alphanum"
+						required data-parsley-length="[8, 15]"
+						data-parsley-length-message="username ต้องมีความยาวระหว่าง 8-15 ตัวอักษร" />
+
+				</div>
+			</div>
+
+			<!-- Text input-->
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="password">รหัสผ่าน</label>
+				<div class="col-md-4">
+					<input id="password" name="password" class="form-control input-md"
+						type="password" maxlength='20' required
+						data-parsley-length="[8, 20]"
+						data-parsley-length-message="password ต้องมีความยาวระหว่าง 8-20 ตัวอักษร" />
+
+				</div>
+			</div>
+
+			<!-- Text input-->
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="passwordConfirm">ยืนยันรหัสผ่าน</label>
+				<div class="col-md-4">
+					<input id="passwordConfirm" name="passwordConfirm"
+						class="form-control input-md" type="password" maxlength='20'
+						required data-parsley-length="[8, 20]"
+						data-parsley-equalto="#password"
+						data-parsley-length-message="password ต้องมีความยาวระหว่าง 8-20 ตัวอักษร"
+						data-parsley-equalto-message="password ไม่ตรงกัน" />
+
+				</div>
+			</div>
+			<div class="row">
+				<!-- Select Basic -->
+				<label class="col-md-4 control-label" for="userType">ประเภทผู้ใช้</label>
+				<div class="col-md-2">
+					<select id="userType" name="userType" class="form-control">
+						<?php foreach ($aUserType as $iKey => $sValue) { ?>
+						<option value="<?php echo $iKey; ?>"
+							<?php
+							
+						//	if ($sUserType == $iKey) {
+						//		echo "selected = 'selected'";
+						//	}
+							?>>
+						<?php echo $sValue; ?>
+						</option>
+						<?php } ?>
+					</select>
+				</div>
+			</div>
+			<div class="col-md-12">&nbsp</div>
+
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="firstname">ชื่อจริง</label>
+				<div class="col-md-4">
+					<input id="firstname" name="firstname"
+						class="form-control input-md" type="text" maxlength='30'
+						Value="<?php echo $sFirstname ?>" required
+						data-parsley-length="[1, 30]"
+						data-parsley-length-message="firstname มีความยาวได้มากสุด 30 ตัวอักษร" />
+
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="lastname">นามสกุล</label>
+				<div class="col-md-4">
+					<input id="lastname" name="lastname" class="form-control input-md"
+						type="text" maxlength='30' Value="<?php echo $sLastname ?>"
+						data-parsley-type="alphanum"
+						required data-parsley-length="[1, 30]"
+						data-parsley-length-message="lastname มีความยาวได้มากสุด 30 ตัวอักษร" />
+
+				</div>
+			</div>
+
+
+
+
+
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="description">ที่อยู่</label>
+				<div class="col-md-4">
+					<textarea id="address" name="address" class="form-control" row="3"
+						style="resize: none;"
+						required data-parsley-length="[1, 250]"
+						data-parsley-length-message="address มีความยาวได้มากสุด 250 ตัวอักษร"
+						required 
+						><?php echo $sAddress ?></textarea>
+				</div>
+			</div>
+
+			
+			<label class="col-md-4 control-label" for="country">ประเทศ</label>
+			<div class="col-md-2">
+				<select id="country" name="country" class="form-control">
+					<option value="Thailand">Thailand</option>
+				</select>
+			</div>
+			<div class="row">
+				<div class="col-md-12">&nbsp</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="telnumber">เบอร์โทรศัพท์</label>
+				<div class="col-md-4">
+					<input id="telnumber" name="telnumber"
+						class="form-control input-md" type="text" maxlength='20'
+						Value="<?php echo $sTelNumber ?>" required
+						data-parsley-type="digits"
+						data-parsley-type-message="ตัวเลขเท่านั้น"
+						data-parsley-length="[1, 10]"
+						
+						data-parsley-length-message="เบอร์โทรศัพท์ยาวได้แค่ 1-10 ตัวอักษรเท่านั้น" />
+
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="email">อีเมลล์</label>
+				<div class="col-md-4">
+					<input id="email" name="email" class="form-control input-md"
+						type="text" maxlength='20' Value="<?php echo $sEmail ?>"
+						required
+						data-parsley-type="email"
+						data-parsley-length="[0, 50]"
+						data-parsley-length-message="email มีความยาวได้มากสุด 50 ตัวอักษร" 
+						 />
+
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="accountnumber">เลขบัญชี</label>
+				<div class="col-md-4">
+					<input id="accountnumber" name="accountnumber"
+						class="form-control input-md" type="text" maxlength='20'
+						Value="<?php echo $sAccountNumber ?>"
+						data-parsley-type="digits"
+						data-parsley-type-message="ตัวเลขเท่านั้น"
+						 />
+
+				</div>
+			</div>
+			<!-- Select Basic -->
+
+
+			</div>
+
+			<br>
+			<!-- Button (Double) -->
+			<div class="form-group">
+				<label class="col-md-5 control-label" for="submit"></label>
+				<div class="col-md-7">
+					<button class="btn btn-back btn-danger" type="button"
+						onclick="window.location='<?php
+						
+						echo $this->url ( array (
+								'controller' => 'setting',
+								'action' => 'user-list' 
+						), null, true );
+						?>';">ย้อนกลับ</button>
+					<button class="btn btn-success" type="submit">
+						<span class="glyphicon glyphicon-ok"></span> ยืนยัน
+					</button>
+				</div>
+			</div>
+		</fieldset>
+		<div class=col-md-4></div>
+
+	</form>
+
+	<div class="modal fade" id="alertModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header text-center">
+					<h4 class="modal-title" id="alertModalLabel">default</h4>
+				</div>
+				<div class="modal-body text-center">
+					<button type="button" class="btn btn-default" data-dismiss="modal">ตกลง</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<?php
+$this->headScript ()->appendScript ( '
+
+		var flash_msg;
+
+
+		$(document).ready(function () {
+
+	
+			// get flash messenger value
+			flash_msg = $("#flash_msg").val();
+		
+			switch(parseInt(flash_msg)) {
+				case 905 :
+					$("#alertModalLabel").html("รูปแบบของ password ต้องประกอบด้วยตัวเลข ตัวพิมพ์ใหญ่ และตัวพิมพ์เล็กอย่างน้อย 1 ตัวอักษร");
+					$("#alertModal").modal("show");
+					break;
+
+				case 906 :
+					$("#alertModalLabel").html("ชื่อต้องเป็นตัวอักษรเท่านั้น");
+					$("#alertModal").modal("show");
+					break;
+
+				case 907 :
+					$("#alertModalLabel").html("นามสกุลต้องเป็นตัวอักษรเท่านั้น");
+					$("#alertModal").modal("show");
+					break;
+
+				case 908 :
+					$("#alertModalLabel").html("ที่อยู่ต้องเป็นภาษาอังกฤษ หรือ , และ . เท่านั้น");
+					$("#alertModal").modal("show");
+					break;
+				case 901 :
+					$("#alertModalLabel").html("กรุณาใส่ข้อมูลให้ครบ");
+					$("#alertModal").modal("show");
+					break;
+				case 898 :
+					$("#alertModalLabel").html("Password ไม่ตรงกัน");
+					$("#alertModal").modal("show");
+					break;
+				case 897 :
+					$("#alertModalLabel").html("Username นี้ถูกใช้งานแล้ว");
+					$("#alertModal").modal("show");
+					break;
+
+				case 897 :
+					$("#alertModalLabel").html("email นี้ถูกใช้งานแล้ว");
+					$("#alertModal").modal("show");
+					break;
+			}
+		});
+
+		
+' );
+?>
+
+
+</body>
+<?php
+/* $this->headScript() -> pointer end of html for include script files (JS) */
+/* reverse order because of prepend! */
+echo $this->headScript()
+->prependFile($this->baseUrl('js/bootstrap.js'))
+->prependFile($this->baseUrl('js/jquery-1.9.0.js'));
+/**/
+?>
+<?php
+$this->headScript()
+->appendScript('
+$(document).ready(function () {
+$("#myTab a").click(function (e) {
+e.preventDefault()
+$(this).tab("show")
+})
+});
+
+');
+?>

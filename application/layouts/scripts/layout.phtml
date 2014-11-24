@@ -1,1 +1,855 @@
-<?php echo $this->layout()->content; ?>
+<?php
+/**
+ * Global layout
+ *
+ * handle all outer content for all view
+ *
+ * @copyright  802 Digital Media Co. Ltd.
+ * @since      File available since Release 1.0
+ */
+?>
+<?php 
+/* Initialize specification standard for this page [Bootstrap.php] */
+/* IMPORTANT! -> set up every time */
+echo $this->doctype();
+/**/
+?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<?php echo $this->headMeta(); ?>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<?php
+/* print html title string and avoid cross-site scripting attack */
+/* $this->headTitle()	-> pointer on html head title */
+/* $this->escape()		-> avoid cross-site scripting attack (every time when you print out)*/
+/* $this->translate()	-> translate variable to text string */
+//echo $this->headTitle($this->escape($this->translate('ttl_application')));
+echo $this->headTitle($this->escape('Warehouse Management System'));
+/**/
+?>
+<base
+	href="<?php
+        if (empty($_SERVER['HTTPS'])) {
+            echo 'http://';
+        } else {
+            echo 'https://';
+        }
+        /* $this->baseUrl()		-> declare base url default or start directory path */
+        echo $_SERVER['HTTP_HOST'].$this->baseUrl();
+        /**/
+        ?>" />
+<link rel="shortcut icon"
+	href="<?php echo $this->baseUrl('images/icon/favicon-icon.ico'); ?>" />
+<link rel="apple-touch-icon-precomposed" sizes="512x512"
+	href="<?php echo $this->baseUrl('images/icon/zbv.png'); ?>" />
+<!--
+    	iPhone and iPad Shortcuts
+    	For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: 57x57
+    	For first-generation iPad: 72x72
+    	For iPhone 4 with high-resolution Retina display: 114x114
+	-->
+<!--
+    	<link rel="apple-touch-icon" href="<?php // echo $this->baseUrl('images/apple-touch-icon.png'); ?>" />
+	    <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.png" />
+	    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="apple-touch-icon-72x72-precomposed.png" />
+	    <link rel="apple-touch-icon-precomposed" sizes="512x512" href="<?php echo $this->baseUrl('images/icon/zbv.png'); ?>" />
+	-->
+<?php
+/* $this->headLink()-> pointer on html head link for style sheet declare (CSS) */
+echo $this->headLink()
+
+->appendStylesheet($this->baseUrl('css/jquery-ui-1.10.4.custom.min.css'))
+->appendStylesheet($this->baseUrl('css/jquery.dataTables.css'))
+->appendStylesheet($this->baseUrl('css/jquery-ui.css'))
+->appendStylesheet($this->baseUrl('css/bootstrap.css'))
+->appendStylesheet($this->baseUrl('css/font-awesome.css'))
+->appendStylesheet($this->baseUrl('css/select2.css'))
+->appendStylesheet($this->baseUrl('css/style.css'))
+->appendStylesheet($this->baseUrl('css/datepicker.css'))
+->appendStylesheet($this->baseUrl('css/parsley.css'))
+->appendStylesheet($this->baseUrl('css/dataTables.jqueryui.css'));
+/* define browser */
+// ->appendStylesheet($this->baseUrl('css/ie.css'), null, 'gte IE 7')
+/**/
+?>
+
+<?php
+	$sWelcomeMessege = ""; 
+	$oSession = new Zend_Session_Namespace('system_session');
+	if(isset($oSession->username)){
+		$sWelcomeMessege = "ยินดีต้อนรับสู่ระบบ EBS,Pun_Arm(Buyer) ";
+	}
+?>
+
+<?php 
+
+	// this wall of code covers almost half an entire length of this php file.
+	// It is here just for graphical directory path that appears at the top area along with logout button
+	// It have to be lengthy like this because it must represent the directory of almost all pages in this project
+	// Don't know any method better than this time-consuming brute-force approach.
+
+	$sControllerName = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
+	$sActionName = Zend_Controller_Front::getInstance()->getRequest()->getActionName();
+	
+	$sDirectory = "";
+	$sDirectory = $sControllerName."/".$sActionName;
+	$sDirectory = strtolower($sDirectory);
+	$aNavbarPath = array();
+	
+	$sPreviousDirectory = "";
+	$aPreviousDirectory = array();
+	if($sDirectory == "batch/batch-info"){
+		
+		$sPreviousUrl = $_SERVER['HTTP_REFERER'];
+		$sPreviousAction = "";
+		$sPreviousController = "";
+		$sToken = strtok($sPreviousUrl, "/");
+		$sToken = strtolower($sToken);
+		while ($sToken !== false) {
+			$aPreviousDirectory[] = $sToken;
+			$sPreviousController = $sPreviousAction;
+			$sPreviousAction = $sToken;
+			$sToken = strtok("/");
+// 			$sToken = strtolower($sToken);
+		}
+		
+		//------------ all possible pages that can link to batch/batch-info------------------
+		
+		if($sPreviousAction == "batch-list-full-screen"){
+			$sPreviousDirectory = 	"<a href='".$this->url(array(
+										'controller' => 'gr',
+										'action' => 'batch-list-full-screen'), null, true)
+									."' style='color: #2888A3; cursor: pointer;'>batch list fullscreen</a>";
+		}else if(($sPreviousAction == "batch-list")&&($sPreviousController == "gr")){
+			$sPreviousDirectory = 	"<a href='".$this->url(array(
+										'controller' => 'gr',
+										'action' => 'batch-list'), null, true)
+									."' style='color: #2888A3; cursor: pointer;'>batch</a>";
+		}else if(($sPreviousAction == "batch-list")&&($sPreviousController == "inventory")){
+			$sPreviousDirectory = 	"<a href='".$this->url(array(
+										'controller' => 'inventory',
+										'action' => 'batch-list'), null, true)
+									."' style='color: #2888A3; cursor: pointer;'>inventory</a>";
+		}else if($sPreviousAction == "ur-list"){
+			$sPreviousDirectory = 	"<a href='".$this->url(array(
+										'controller' => 'gt',
+										'action' => 'ur-list'), null, true)
+									."' style='color: #2888A3; cursor: pointer;'>UR list</a>";
+		}else if($sPreviousAction == "qi-list"){
+			$sPreviousDirectory = 	"<a href='".$this->url(array(
+										'controller' => 'gt',
+										'action' => 'qi-list'), null, true)
+									."' style='color: #2888A3; cursor: pointer;'>QI list</a>";
+		}else if($sPreviousAction == "blocked-list"){
+			$sPreviousDirectory = 	"<a href='".$this->url(array(
+										'controller' => 'gt',
+										'action' => 'blocked-list'), null, true)
+									."' style='color: #2888A3; cursor: pointer;'>blocked stock list</a>";
+		}else if($sPreviousAction == "temp-gr-batch-list"){
+			$sPreviousDirectory = 	"<a href='".$this->url(array(
+										'controller' => 'inventory',
+										'action' => 'temp-gr-batch-list'), null, true)
+									."' style='color: #2888A3; cursor: pointer;'>TGR</a>";
+		}else if($sPreviousAction == "temp-gi-batch-list"){
+			$sPreviousDirectory = 	"<a href='".$this->url(array(
+										'controller' => 'inventory',
+										'action' => 'temp-gi-batch-list'), null, true)
+									."' style='color: #2888A3; cursor: pointer;'>TGI</a>";
+		}else if($aPreviousDirectory[3] == "location-batch-list"){
+			$sPreviousDirectory = 	"<a href='".$sPreviousUrl
+									."' style='color: #2888A3; cursor: pointer;'>location batch list</a>";
+		}else if($aPreviousDirectory[3] == "material-batch-list"){
+			$sPreviousDirectory = 	"<a href='".$sPreviousUrl
+									."' style='color: #2888A3; cursor: pointer;'>material batch list</a>";
+		}
+	}
+	
+	//--------------------------------------------------------------------------------------------------
+		
+	switch ($sDirectory){
+		
+	//-------------------- spacial case (multiple pages link to to same page)---------------------------
+		
+		case "batch/batch-info"
+				: 	$aNavbarPath = array(
+						"<a href='".$this->url(array(
+						'controller' => 'index',
+						'action' => 'main'), null, true)
+						."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+						
+						$sPreviousDirectory,
+				
+						"<span style='color: #2888A3;'>batch information</span>"
+					);
+				
+					if($aPreviousDirectory[3] == "location-batch-list"){
+						$sToInsert = 	"<a href='".$this->url(array(
+											'controller' => 'location',
+											'action' => 'location-list'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>location</a>";
+						array_splice( $aNavbarPath, 1, 0, $sToInsert );
+					}else if($aPreviousDirectory[3] == "material-batch-list"){
+						$sToInsert = 	"<a href='".$this->url(array(
+											'controller' => 'material',
+											'action' => 'material-list'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>material</a>";
+						array_splice( $aNavbarPath, 1, 0, $sToInsert );
+					}
+				
+					break;
+		
+	//------------------------------------------- end --------------------------------------------------
+	
+	//----------------------------------- other ordinary cases -----------------------------------------
+		
+		case "index/main" 		: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+										
+										"<span style='color: #2888A3;'>smart view</span>"
+									);
+									break;
+
+		case "gr/batch-list"	
+								: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+									
+										"<span style='color: #2888A3;'>batch</span>"
+									);
+									break;
+		
+		case "batch/batch-add-form"	
+								: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+										
+										"<a href='".$this->url(array(
+											'controller' => 'gr',
+											'action' => 'batch-list'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>batch</a>",
+										
+										"<span style='color: #2888A3;'>add batch</span>"
+									);
+									break;
+									
+		case "batch/batch-edit-form" 	
+								: 	$sPreviousUrl = $_SERVER['HTTP_REFERER'];
+									$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+									
+										"<span style='color: #2888A3;'>...</span>",
+									
+										"<a class='backButton' style='color: #2888A3; cursor: pointer;'>batch information</a>",
+									
+										"<span style='color: #2888A3;'>edit batch</span>"
+									
+									);
+									break;
+		
+		case "gr/batch-success-list"	
+								: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+										
+										"<a href='".$this->url(array(
+											'controller' => 'gr',
+											'action' => 'batch-list'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>batch</a>",
+									
+										"<span style='color: #2888A3;'>success list</span>"
+									);
+									break;
+									
+		case "gt/qi-list"		: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+											
+										"<span style='color: #2888A3;'>QI list</span>"
+									);
+									break;
+									
+		case "gt/blocked-list"	: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+											
+										"<span style='color: #2888A3;'>blocked stock list</span>"
+									);
+									break;
+									
+		case "gt/ur-list"	: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+										
+										"<span style='color: #2888A3;'>UR list</span>"
+									);
+									break;
+									
+		case "inventory/batch-list"	
+								: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+											
+										"<span style='color: #2888A3;'>inventory</span>"
+									);
+									break;
+									
+		case "location/location-list"
+								: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+												
+										"<span style='color: #2888A3;'>location</span>"
+									);
+									break;
+									
+		case "location/location-info"
+								: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+									
+										"<a href='".$this->url(array(
+											'controller' => 'location',
+											'action' => 'location-list'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>location</a>",
+									
+										"<span style='color: #2888A3;'>location information</span>"
+									);
+									break;
+									
+		case "location/location-batch-list"
+								: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+												
+										"<a href='".$this->url(array(
+											'controller' => 'location',
+											'action' => 'location-list'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>location</a>",
+												
+										"<span style='color: #2888A3;'>location batch list</span>"
+									);
+									break;
+									
+		case "inventory/temp-gr-batch-list"
+									: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+									
+										"<span style='color: #2888A3;'>TGR</span>"
+									);
+									break;
+									
+		case "inventory/temp-gi-batch-list"
+									: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+												
+										"<span style='color: #2888A3;'>TGI</span>"
+									);
+									break;
+					
+		case "inventory/dummy-area-batch-list"
+									: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+									
+										"<span style='color: #2888A3;'>Dummy Area</span>"
+									);
+									break;
+									
+		case "material/material-list"
+									: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+												
+										"<span style='color: #2888A3;'>Material</span>"
+									);
+									break;
+									
+		case "material/material-info"
+									: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+												
+										"<a href='".$this->url(array(
+											'controller' => 'material',
+											'action' => 'material-list'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>material</a>",
+												
+										"<span style='color: #2888A3;'>material information</span>"
+									);
+									break;
+									
+		case "material/material-batch-list"
+									: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+									
+										"<a href='".$this->url(array(
+											'controller' => 'material',
+											'action' => 'material-list'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>material</a>",
+									
+										"<span style='color: #2888A3;'>material batch list</span>"
+									);
+									break;
+									
+		case "setting/user-list" 		
+									: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+									
+										"<span style='color: #2888A3;'>user</span>"
+									);
+									break;
+
+		case "setting/user-info"
+									: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+												
+										"<a href='".$this->url(array(
+											'controller' => 'setting',
+											'action' => 'user-list'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>user</a>",
+												
+										"<span style='color: #2888A3;'>user information</span>"
+									);
+									break;
+															
+		case "setting/user-add-form"		
+									: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+									
+										"<a href='".$this->url(array(
+											'controller' => 'setting',
+											'action' => 'user-list'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>user</a>",
+									
+										"<span style='color: #2888A3;'>add user</span>"
+									);
+									break;
+										
+		case "setting/user-edit-form"
+									: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+									
+										"<a href='".$this->url(array(
+											'controller' => 'setting',
+											'action' => 'user-list'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>user</a>",
+									
+										"<span style='color: #2888A3;'>edit user</span>"
+									);
+									break;
+												
+		case "setting/user-delete-form"	
+									: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+									
+										"<a href='".$this->url(array(
+											'controller' => 'setting',
+											'action' => 'user-list'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>user</a>",
+									
+										"<span style='color: #2888A3;'>delete user</span>"
+									);
+									break;
+									
+		case "setting/cost-center-list"
+									: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+												
+										"<span style='color: #2888A3;'>cost center</span>"
+									);
+									break;
+									
+		case "setting/cost-center-add-form"	
+									: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+									
+										"<a href='".$this->url(array(
+											'controller' => 'setting',
+											'action' => 'cost-center-list'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>cost center</a>",
+									
+										"<span style='color: #2888A3;'>add cost center</span>"
+									);
+									break;
+												
+		case "setting/cost-center-edit-form"	
+									: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+									
+										"<a href='".$this->url(array(
+											'controller' => 'setting',
+											'action' => 'cost-center-list'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>cost center</a>",
+									
+										"<span style='color: #2888A3;'>edit cost center</span>"
+									);
+									break;
+												
+		case "setting/cost-center-delete-form"	
+									: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+									
+										"<a href='".$this->url(array(
+											'controller' => 'setting',
+											'action' => 'cost-center-list'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>cost center</a>",
+									
+										"<span style='color: #2888A3;'>delete cost center</span>"
+									);
+									break;
+									
+		case "setting/gl-account-list"
+									: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+									
+										"<span style='color: #2888A3;'>gl account</span>"
+									);
+									break;
+														
+		case "setting/gl-account-add-form"
+									: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+												
+										"<a href='".$this->url(array(
+											'controller' => 'setting',
+											'action' => 'gl-account-list'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>gl account</a>",
+												
+										"<span style='color: #2888A3;'>add gl account</span>"
+									);
+									break;
+									
+		case "setting/gl-account-edit-form"
+									: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+												
+										"<a href='".$this->url(array(
+											'controller' => 'setting',
+											'action' => 'gl-account-list'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>gl account</a>",
+												
+										"<span style='color: #2888A3;'>edit gl account</span>"
+									);
+									break;
+									
+		case "setting/gl-account-delete-form"
+									: 	$aNavbarPath = array(
+										"<a href='".$this->url(array(
+											'controller' => 'index',
+											'action' => 'main'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>WMS</a>",
+												
+										"<a href='".$this->url(array(
+											'controller' => 'setting',
+											'action' => 'gl-account-list'), null, true)
+										."' style='color: #2888A3; cursor: pointer;'>gl account</a>",
+												
+										"<span style='color: #2888A3;'>delete gl account</span>"
+									);
+									break;
+									
+	}
+	
+	//------------------------------------- end of directory part ---------------------------------------------
+	
+?>
+
+</head>
+<body>
+	<div class="container" id="myContainer" style="width: 100%; height: 100%;">
+		<div class="row dgd-bg-white" style="height: 100%;">
+			
+			<!-- start topArea -->
+			<div id="topArea" class="col-md-12 col-sm-12 col-xm-12" style="background-color: #F4C747; height: 80px; z-index: 5;">
+			
+				<div class="col-md-9">
+					<h2 class="text-left" style="color: #FFFFFF">&nbsp&nbspElectronic Bidding System</h2>
+				</div>
+		        <div class="col-md-3">
+		        	<div class="row">&nbsp</div>
+		        	
+		        	<form id="searchForm" name="searchForm"
+						action="<?php echo $this->url(array(
+									'controller' => 'product',
+									'action' => 'search-product'), null, true); ?>"
+						enctype="application/x-www-form-urlencoded" method="post">
+						<input type="text" name="sSearchName" class="input-block-level"
+						placeholder="ค้นหาผลิตภัณฑ์"/>
+						<button class="btn btn-success" type="submit">
+						<span class="glyphicon glyphicon-search"></span>ค้นหา</button>
+					</form>	
+		        </div>
+			</div>
+			<!-- end topArea -->
+			
+			<!-- start navbarArea -->
+			<div id="navbarArea" class="col-md-12 col-sm-12 col-xm-12" style="position: absolute ;background-color: #CCCCCC; height: 45px; top: 80px; z-index: 4;">
+				
+				<div class="btn-group" style="position: absolute; right: 10px; top: 5px">
+				  	<button type="button" class="btn btn-success"
+				  	onclick="window.location='<?php echo $this->url(array(
+								'controller' => 'system',
+								'action' => 'logout'), null, true); ?>';"
+				  	>ออกจากระบบ</button>
+				</div>
+				
+				<div class="btn-group" style="position: absolute; right: 120px; top: 7px; color: #0A1135;">
+				  	<h5><?php echo $sWelcomeMessege; ?></h5>
+				</div>
+				
+				<!-- start graphical directory path -->
+				<div style="position: absolute; left: 250px; top: 4px; background-color: #F5F5F5;">
+					<div style="position: relative; height: 38px; width: 100%; top: 0px; left: 0px; z-index: 2">
+						<span>&nbsp&nbsp&nbsp</span>
+										
+						<?php 
+							for($i = 0; $i < count($aNavbarPath); $i++){
+						?>
+						<span><?php echo $aNavbarPath[$i]; ?></span>
+						<span>
+							<?php 
+								if($i == count($aNavbarPath) - 1) {
+							?>
+								<img src='../images/last_directory_spliter.png' height='38' width='25'>
+							<?php
+								}
+								else {
+							?>
+									<img src='../images/directory_spliter.png' height='38' width='25'>
+							<?php
+								}
+							?>
+						</span>
+						<?php
+							}
+						?>
+					</div>
+				</div>
+				<!-- end graphical directory path -->
+				
+			</div>
+			<!-- end navbarArea -->
+			
+			<!-- start sideMenu and contentArea combined -->
+			<div class="col-md-12 col-sm-12 col-xm-12 wrapper" style="padding-left: 250px; transition: all 0.4s ease 0s;
+			position: relative; height: 100%; top: 35px;">
+			
+				<!-- start sideMenu -->
+				<!-- this part makes sideMenu behaves like fluid when resizing screen -->
+				<div id="navigatorWrapper" style="margin-left: -250px;
+				top : -60px;
+				left: 250px;
+				width: 250px;
+				background: #F4C747;
+			  	position: absolute;
+				min-height: 600px;
+				height: 130%;
+			  	overflow-y: auto;
+			  	z-index: 5;
+			 	transition: all 0.4s ease 0s;">
+				
+					
+						
+							<div class="btn-group-vertical" style="position: absolute; top: 20px; left: 30px; width: 190px;">
+								<button type="button" class="btn btn-warning"
+									onclick="window.location='<?php echo $this->url(array(
+											'controller'	=> 'index',
+											'action'		=> 'product-list',), null, true); ?>';">
+												<span class="glyphicon glyphicon-home"></span> กลับสู่หน้าแรก
+											</button>
+							</div>
+							<div class="btn-group-vertical" style="position: absolute; top: 80px; left: 30px; width: 190px;">
+								<div class="btn-group">
+									<button id="btnGroupVerticalDrop1" type="button"
+									class="btn btn-default dropdown-toggle dgd-text-left-imp"
+									data-toggle="dropdown">
+<!-- 										<span class="glyphicon glyphicon-save"></span>&nbsp&nbsp -->
+										<small>เมนูผู้ซื้อ</small>
+										<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu menuBar" role="menu"
+									aria-labelledby="btnGroupVerticalDrop1">
+										<li><a href="<?php echo $this->url(array(
+											'controller'	=> 'gr',
+											'action'		=> 'batch-list',), null, true); ?>">
+												<p>Put-away monitor</p> </a></li>
+										<li><a href="<?php echo $this->url(array(
+											'controller' => 'gr',
+											'action' => 'batch-list-full-screen'), null, true); ?>">
+												<p>Monitor full screen</p> </a></li>
+										<li><a href="<?php echo $this->url(array(
+											'controller' => 'batch',
+											'action' => 'batch-add-form'), null, true); ?>">
+												<p>Add new batch</p> </a></li>		
+									</ul>
+								</div>
+								
+								<div class="btn-group">
+									<button id="btnGroupVerticalDrop1" type="button"
+									class="btn btn-default dropdown-toggle dgd-text-left-imp"
+									data-toggle="dropdown">
+<!-- 										<span class="glyphicon glyphicon-open"></span>&nbsp&nbsp -->
+										<small>แก้ไขข้อมูลส่วนบุคคล</small>
+										<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu menuBar" role="menu"
+									aria-labelledby="btnGroupVerticalDrop1">
+										<li><a href="<?php echo $this->url(array(
+											'controller'	=> 'Gi',
+											'action'		=> 'dp-list',), null, true); ?>">
+												<p>DP monitor</p> </a></li>		
+									</ul>
+								</div>
+								
+											
+							</div>
+							
+							
+						
+						
+					
+				</div>
+				<!-- end sideMenu -->
+				
+				<!-- start contentArea -->
+				<div id="contentArea" style="width: 100%; height: 100%;">
+					<?php echo $this->layout()->content; ?>
+				</div>
+				<!-- end contentArea -->
+				
+			</div>
+			<!-- end sideMenu and contentArea combined -->
+									
+			<!-- paint the remain space below sideMenu with the same background color -->
+			<!-- this part is a bit window dressing -->								
+			<div style="
+				bottom : 0px;
+				left: 0px;
+				width: 250px;
+				background: #0A1135;
+			  	position: absolute;
+				height: 100%;
+			  	overflow-y: auto;
+			  	z-index: 3;
+			 	transition: all 0.4s ease 0s;">
+		 	</div>
+		 	<!-- end -->
+			
+		</div>
+	</div>
+	
+	<?php 
+	$this->headScript()
+		->appendScript('
+			$(document).ready(function () {
+				
+				$(".backButton").bind("click", function(e){
+					e.preventDefault();
+					window.history.back();
+				});
+				
+			});
+				 
+		');
+	?>
+	
+	<?php
+	/* $this->headScript()	-> pointer end of html for include script files (JS) */
+	/* reverse order because of prepend! */
+	echo $this->headScript()
+	->prependFile($this->baseUrl('js/bootstrap-confirmation.js'))
+	->prependFile($this->baseUrl('js/bootstrap-datepicker.js'))
+	->prependFile($this->baseUrl('js/select2.js'))
+	->prependFile($this->baseUrl('js/dataTables.jqueryui.js'))
+	//->prependFile($this->baseUrl('js/jquery-ui-1.10.4.custom.min.js'))
+	->prependFile($this->baseUrl('js/data_table/jquery.dataTables.columnFilter.js'))
+	//->prependFile($this->baseUrl('js/data_table/jquery.dataTables.min.js'))
+	->prependFile($this->baseUrl('js/data_table/jquery.dataTables.js'))
+	//->prependFile($this->baseUrl('js/data_table/jquery.js'))
+	->prependFile($this->baseUrl('js/bootstrap.js'))
+	->prependFile($this->baseUrl('js/parsley.min.js'))
+	->prependFile($this->baseUrl('js/jquery-1.9.0.js'));
+	/**/
+	
+	?>
+	
+</body>
+</html>
