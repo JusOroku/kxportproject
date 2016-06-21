@@ -1,7 +1,8 @@
-kxportproject
-=============
+KX Port Project <br />
+============= <br />
 
-for kxport
+Software Engineering Course Project (Undergraduate 4th years in 2014) <br />
 
-test git status
+Making a prototype for e-commerce store website. <br />
 
+created by using PHP and Zend framework as a main structure. <br />
